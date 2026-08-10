@@ -71,7 +71,7 @@ const FULL_TEST = [
   { text: "Even in dark moods, part of me feels more alive and more myself — the intensity has meaning.", w: { 4: 0.9 } },
 
   // ---- Type 5 ----
-  { text: "I ration my time and energy like scarce resources.", w: { 5: 1 } },
+  { text: "I ration my time and energy like scarce resources.", w: { 5: 1 }, cid: "c2" },
   { text: "I withdraw to think things through, and engage only after I've figured them out.", w: { 5: 1 } },
   { text: "Being intruded on — emotionally or practically — drains me more than it seems to drain others.", w: { 5: 1 }, c: { autism: 0.3 } },
   { text: "I accumulate knowledge and skills to feel capable enough to face the world.", w: { 5: 1, 6: 0.2 } },
@@ -79,7 +79,7 @@ const FULL_TEST = [
   { text: "I keep my needs small so that nothing and no one can hold anything over me.", w: { 5: 1 } },
 
   // ---- Type 6 ----
-  { text: "I rehearse worst-case scenarios so nothing can catch me unprepared.", w: { 6: 1 }, c: { anxiety: 0.4 } },
+  { text: "I rehearse worst-case scenarios so nothing can catch me unprepared.", w: { 6: 1 }, c: { anxiety: 0.4 }, cid: "c1" },
   { text: "I'm skeptical of confident authorities — and yet I keep looking for something solid to rely on.", w: { 6: 1 } },
   { text: "I second-guess my own decisions and seek reassurance or outside opinions.", w: { 6: 1 } },
   { text: "Loyalty is central to me: I stand by my people and expect the same in return.", w: { 6: 1, 2: 0.2 } },
@@ -137,7 +137,40 @@ const FULL_TEST = [
   { text: "People close to me say my orderliness or control costs me relationships and efficiency — and I can't dial it down even when I agree.", c: { ocpd: 1 } },
   // Social anxiety
   { text: "I want connection, but fear of embarrassment or judgment keeps me isolated.", c: { socialanx: 1 } },
-  { text: "Around social events I'm consumed by fear of humiliation — dreading beforehand, replaying mistakes afterward.", c: { socialanx: 1 } }
+  { text: "Around social events I'm consumed by fear of humiliation — dreading beforehand, replaying mistakes afterward.", c: { socialanx: 1 } },
+
+  // ---- Reverse-keyed items (one per type, counter acquiescence bias) ----
+  { text: "I'm easygoing about mistakes — mine and other people's.", w: { 1: 1 }, rev: true },
+  { text: "I'm comfortable letting people struggle without stepping in to help.", w: { 2: 1 }, rev: true },
+  { text: "How I'm perceived has little influence on my choices.", w: { 3: 1 }, rev: true },
+  { text: "I rarely feel that something important is missing from my life.", w: { 4: 1 }, rev: true },
+  { text: "Sharing my time and space freely doesn't drain me.", w: { 5: 1 }, rev: true },
+  { text: "I rarely rehearse what could go wrong.", w: { 6: 1 }, rev: true },
+  { text: "I'm content repeating the same routines for long stretches.", w: { 7: 1 }, rev: true },
+  { text: "I'm comfortable being directed by other people.", w: { 8: 1 }, rev: true },
+  { text: "I state my own agenda clearly even when it causes conflict.", w: { 9: 1 }, rev: true },
+
+  // ---- Validity: social desirability (nobody can truthfully strongly agree) ----
+  { text: "I have never envied another person.", v: "sd" },
+  { text: "I have never said anything unkind about someone who wasn't in the room.", v: "sd" },
+
+  // ---- Validity: consistency twins (near-duplicates; big gaps flag careless answering) ----
+  { text: "I run through worst-case scenarios ahead of time so nothing catches me by surprise.", cid: "c1" },
+  { text: "I budget my energy carefully, like money that could run out.", cid: "c2" },
+
+  // ---- Instinct scales (same items as the instincts mini-test) ----
+  { text: "I track comfort, health, money, and supplies almost automatically.", i: { sp: 1 } },
+  { text: "Before enjoying a place, I've noted the exits, the temperature, and where I'll sit.", i: { sp: 1 } },
+  { text: "Security concerns — bills, food, sleep — can override my social plans.", i: { sp: 1 } },
+  { text: "I'm the one who makes sure there are snacks, backups, and a plan B.", i: { sp: 1 } },
+  { text: "I always know roughly where I stand in a group's pecking order.", i: { so: 1 } },
+  { text: "Belonging to communities and causes energizes me.", i: { so: 1 } },
+  { text: "I notice who's in, who's out, and how alliances are shifting.", i: { so: 1 } },
+  { text: "I shape myself to be a useful contributor to whatever group I'm in.", i: { so: 1 } },
+  { text: "One-on-one intensity beats any party.", i: { sx: 1 } },
+  { text: "I seek full-contact chemistry with specific people, not general pleasantness.", i: { sx: 1 } },
+  { text: "When someone or something fascinates me, everything else fades out.", i: { sx: 1 } },
+  { text: "I would rather have one electric connection than broad, mild harmony.", i: { sx: 1 } }
 ];
 
 /* ---------------------------------------------------------------------------
@@ -366,8 +399,42 @@ const MC_DISC_FULL = [
     ] }
 ];
 
+/* Instinct triads (forced choice) for the exhaustive multiple-choice test. */
+const MC_INSTINCTS = [
+  { text: "It's Friday night with zero obligations. The genuinely best version:",
+    options: [
+      { label: "Home: good food, comfortable clothes, nobody needing anything from me.", i: { sp: 1 } },
+      { label: "A gathering — hosting or joining the people I belong with.", i: { so: 1 } },
+      { label: "One person, one long conversation that goes somewhere deep.", i: { sx: 1 } }
+    ] },
+  { text: "Walking into a party, what do you notice first?",
+    options: [
+      { label: "Temperature, food, seating, exits.", i: { sp: 1 } },
+      { label: "The social map — who's here, who matters, who's talking to whom.", i: { so: 1 } },
+      { label: "Whether anyone here is interesting enough to fixate on.", i: { sx: 1 } }
+    ] },
+  { text: "Which loss would hit hardest?",
+    options: [
+      { label: "My financial cushion and home base.", i: { sp: 1 } },
+      { label: "My standing and belonging in my communities.", i: { so: 1 } },
+      { label: "The charged closeness with my person.", i: { sx: 1 } }
+    ] },
+  { text: "Your friends would describe you as…",
+    options: [
+      { label: "The prepared one, who always has what's needed.", i: { sp: 1 } },
+      { label: "The connector, who knows everyone.", i: { so: 1 } },
+      { label: "The intense one, all-or-nothing about people.", i: { sx: 1 } }
+    ] },
+  { text: "A perfect vacation is…",
+    options: [
+      { label: "Comfortable, safe, and well-provisioned — a nest away from home.", i: { sp: 1 } },
+      { label: "Shared — a group trip with the people I love being part of.", i: { so: 1 } },
+      { label: "With one person, somewhere that makes us feel more alive.", i: { sx: 1 } }
+    ] }
+];
+
 const SHORT_MC = [...MC_CORE, ...MC_DISC_CORE];
-const FULL_MC = [...MC_CORE, ...MC_EXTRA, ...MC_DISC_CORE, ...MC_DISC_FULL];
+const FULL_MC = [...MC_CORE, ...MC_EXTRA, ...MC_DISC_CORE, ...MC_DISC_FULL, ...MC_INSTINCTS];
 
 if (typeof module !== "undefined") {
   module.exports = { SHORT_TEST, FULL_TEST, SHORT_MC, FULL_MC };

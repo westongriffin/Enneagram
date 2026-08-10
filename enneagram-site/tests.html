@@ -17,6 +17,7 @@
       <nav class="main" aria-label="Main">
         <a href="index.html">Overview</a>
         <a href="types.html">Types</a>
+        <a href="growth.html">Growth</a>
         <a href="mislabelings.html">Mislabelings</a>
         <a href="instincts.html">Instincts</a>
         <a href="relationships.html">Pairings</a>
@@ -53,16 +54,52 @@
           </div>
         </div>
         <div class="card" id="full">
-          <p class="kicker">Exhaustive · ≈ 15–20 minutes</p>
+          <p class="kicker">Exhaustive · ≈ 20–25 minutes</p>
           <h2 style="margin:0.25rem 0">Exhaustive test</h2>
-          <p>Full look-alike screening with onset and context questions that behavior-only tests
-          skip. Two formats: <strong>rate statements</strong> (75 items) or
-          <strong>multiple choice</strong> (30 scenario and either/or questions, including items
-          that put a type and its clinical look-alike side by side).</p>
+          <p>The complete assessment: type, wing, <strong>instinct stacking and subtype</strong>,
+          full look-alike screening, and built-in validity checks. Two formats:
+          <strong>rate statements</strong> (100 items, including reverse-keyed and consistency
+          items) or <strong>multiple choice</strong> (35 scenario, either/or, and instinct
+          questions).</p>
           <div class="format-row">
             <button class="btn" id="start-full" type="button">Rate statements</button>
             <button class="btn" id="start-full-mc" type="button">Multiple choice</button>
           </div>
+        </div>
+      </div>
+
+      <div class="card" id="history-card" hidden>
+        <h2 style="margin-top:0" class="no-rule">Your result history</h2>
+        <p class="quiz-meta">Stored only in this browser — nothing is uploaded anywhere.</p>
+        <div id="history-list"></div>
+        <p><button class="btn ghost" id="history-clear" type="button">Clear history</button></p>
+      </div>
+
+      <h2>How these tests are built</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <p class="kicker">Motivation-first items</p>
+          <p>Questions target the <em>why</em> under behavior (core fears and desires), because
+          two types can share every behavior and differ only in motive — the thing most free
+          enneagram tests never ask about.</p>
+        </div>
+        <div class="card">
+          <p class="kicker">Look-alike screening</p>
+          <p>Separate scales for ADHD, anxiety, depression, autism, trauma, OCD/OCPD, social
+          anxiety, and hypomania — with onset and context questions — flag when a clinical
+          pattern may be inflating a type score.</p>
+        </div>
+        <div class="card">
+          <p class="kicker">Response-bias defenses</p>
+          <p>The 100-item version includes reverse-keyed items (so habitual agreeing can't fake a
+          type), social-desirability catches, and paired consistency questions that flag rushed
+          answering. The multiple-choice format resists over-agreement entirely.</p>
+        </div>
+        <div class="card">
+          <p class="kicker">Honest limits</p>
+          <p>These are serious self-report instruments, but they are not normed or clinically
+          validated, and no personality test diagnoses anything. Results are hypotheses — the
+          gold standard is sustained self-observation against the type descriptions.</p>
         </div>
       </div>
 
@@ -102,6 +139,7 @@
   <div id="print-area" aria-hidden="true"></div>
 
   <script src="js/data.js"></script>
+  <script src="js/instincts.js"></script>
   <script src="js/questions.js"></script>
   <script src="js/quiz.js"></script>
 </body>

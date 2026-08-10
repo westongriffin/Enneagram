@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Growth Paths — enneaguide</title>
+  <meta name="description" content="A growth path for each enneagram type: what healthy, average, and unhealthy look like, early-warning signs, concrete practices, and how to use your arrows deliberately.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='44' fill='none' stroke='%232a78d6' stroke-width='7'/%3E%3Cpath d='M50 14 L81 68 L19 68 Z' fill='none' stroke='%231baf7a' stroke-width='7' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <meta name="theme-color" content="#f9f9f7" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0d0d0d" media="(prefers-color-scheme: dark)">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site">
+    <div class="bar">
+      <a class="brand" href="index.html">ennea<span>guide</span></a>
+      <nav class="main" aria-label="Main">
+        <a href="index.html">Overview</a>
+        <a href="types.html">Types</a>
+        <a href="growth.html" aria-current="page">Growth</a>
+        <a href="mislabelings.html">Mislabelings</a>
+        <a href="instincts.html">Instincts</a>
+        <a href="relationships.html">Pairings</a>
+        <a href="similarities.html">Similarities</a>
+        <a href="tests.html">Tests</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h1>Growth Paths</h1>
+    <p>
+      Knowing your type is diagnosis; this page is treatment. Every type exists on a ladder of
+      health — the same Nine can be a checked-out couch ghost or the most quietly powerful person
+      in the room. Below, for each type: what <strong>healthy</strong>, <strong>average</strong>,
+      and <strong>unhealthy</strong> actually look like, the <strong>early-warning sign</strong>
+      that you're sliding, four <strong>concrete practices</strong>, and how to use your
+      <strong>growth arrow</strong> on purpose instead of waiting for it.
+    </p>
+    <div class="callout">
+      <p><strong>How to use this page:</strong> read your own type's section weekly, not once.
+      The practices are small on purpose — inner work compounds like interest, and the
+      early-warning sign matters more than any description of the summit. If the unhealthy band
+      describes your daily life, this page is a supplement, not a substitute: that's what
+      therapists are for.</p>
+    </div>
+    <nav id="type-jump" class="type-jump" aria-label="Jump to type"></nav>
+    <div id="growth-list"></div>
+  </main>
+
+  <footer class="site">
+    <p>enneaguide — an educational resource. Level sketches condense the Riso–Hudson
+    levels-of-development tradition; practices are standard inner-work staples matched to type,
+    not clinical advice.</p>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/growth.js"></script>
+  <script>
+    (function () {
+      function centerClass(t) {
+        const c = ENNEAGRAM_TYPES[t].center;
+        return c.indexOf("Body") === 0 ? "center-body" : c.indexOf("Heart") === 0 ? "center-heart" : "center-head";
+      }
+      const jump = [];
+      const wrap = document.getElementById("growth-list");
+      for (let n = 1; n <= 9; n++) {
+        const t = ENNEAGRAM_TYPES[n];
+        const g = GROWTH[n];
+        const cc = centerClass(n);
+        jump.push('<a href="#type-' + n + '"><span class="type-num ' + cc + '">' + n + '</span>' +
+                  t.name.replace("The ", "") + '</a>');
+        const sec = document.createElement("section");
+        sec.className = "card " + cc;
+        sec.id = "type-" + n;
+        sec.innerHTML =
+          '<div class="type-head">' +
+            '<span class="type-num">' + n + '</span>' +
+            '<h2 style="margin:0" class="no-rule">Growing as ' +
+              (/^[AEIOU]/.test(t.name.replace("The ", "")) ? "an " : "a ") + t.name.replace("The ", "") + '</h2>' +
+          '</div>' +
+          '<div class="grid cols-3" style="margin-top:1rem">' +
+            '<div class="level level-healthy"><p class="kicker">Healthy</p><p>' + g.healthy + '</p></div>' +
+            '<div class="level level-average"><p class="kicker">Average</p><p>' + g.average + '</p></div>' +
+            '<div class="level level-unhealthy"><p class="kicker">Unhealthy</p><p>' + g.unhealthy + '</p></div>' +
+          '</div>' +
+          '<div class="callout flag" style="margin:1.25rem 0"><p><strong>Early-warning sign:</strong> ' + g.watchFor + '</p></div>' +
+          '<h3>Practices</h3><ul>' +
+            g.practices.map(function (p) { return "<li>" + p + "</li>"; }).join("") +
+          '</ul>' +
+          '<p><span class="pill">Growth → ' + t.growthArrow.to + '</span>' + t.growthArrow.text +
+          ' <span class="pill">Stress → ' + t.stressArrow.to + '</span>' + t.stressArrow.text + '</p>' +
+          '<p class="quiz-meta"><a href="types.html#type-' + n + '">Full Type ' + n + ' profile</a> · ' +
+          '<a href="instincts.html">Your instinct blind spot matters here too →</a></p>';
+        wrap.appendChild(sec);
+      }
+      document.getElementById("type-jump").innerHTML = jump.join("");
+      if (location.hash) {
+        const target = document.getElementById(location.hash.slice(1));
+        if (target) target.scrollIntoView({ behavior: "instant", block: "start" });
+      }
+    })();
+  </script>
+</body>
+</html>
