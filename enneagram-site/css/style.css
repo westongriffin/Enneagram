@@ -344,6 +344,36 @@ details summary:hover { color: var(--accent); }
 
 .result-flag { margin-top: 1rem; }
 .result-flag h4 { margin: 0 0 0.35rem; }
+.result-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1.5rem; }
+
+/* ---------- PDF report (print) ---------- */
+#print-area { display: none; }
+@media print {
+  body.print-result header.site,
+  body.print-result main,
+  body.print-result footer.site { display: none !important; }
+  body.print-result #print-area { display: block; }
+  #print-area {
+    color: #000; background: #fff;
+    font-size: 11pt; line-height: 1.5;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  #print-area h1 { font-size: 20pt; margin: 0.25rem 0; }
+  #print-area h2 { font-size: 13pt; margin: 1.2rem 0 0.4rem; }
+  #print-area .p-brand {
+    font-size: 9pt; letter-spacing: 0.08em; text-transform: uppercase;
+    color: #444; border-bottom: 1px solid #999; padding-bottom: 0.3rem;
+  }
+  #print-area table { width: 100%; border-collapse: collapse; font-size: 10pt; }
+  #print-area th, #print-area td { text-align: left; padding: 0.25rem 0.5rem; border-bottom: 1px solid #ccc; }
+  #print-area .p-track { width: 45%; }
+  #print-area .p-bar {
+    display: block; height: 9px; background: #2a78d6;
+    border-radius: 0 3px 3px 0; min-width: 2px;
+    print-color-adjust: exact; -webkit-print-color-adjust: exact;
+  }
+  #print-area .p-foot { font-size: 9pt; color: #444; margin-top: 1.2rem; border-top: 1px solid #999; padding-top: 0.4rem; }
+}
 
 footer.site {
   border-top: 1px solid var(--hairline);

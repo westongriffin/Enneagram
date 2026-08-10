@@ -31,6 +31,7 @@
   let answers = [];
   let idx = 0;
   let advancing = false;
+  let lastResult = null;
 
   const $ = (sel) => document.querySelector(sel);
 
@@ -189,9 +190,122 @@
     });
   }
 
+  /* ---- Result sharing: encode scores into a URL-safe token ---- */
+
+  function encodeResult(result) {
+    const byType = {};
+    result.types.forEach(function (r) { byType[r.type] = r.pct; });
+    const tp = [];
+    for (let t = 1; t <= 9; t++) tp.push(byType[t] || 0);
+    const cp = Object.keys(CONFOUNDS).map(function (k) { return result.confounds[k] || 0; });
+    return ["v1", bankName, tp.join("-"), cp.join("-")].join(".");
+  }
+
+  function decodeResult(s) {
+    const parts = String(s).split(".");
+    if (parts.length !== 4 || parts[0] !== "v1" || !BANKS[parts[1]]) return null;
+    const tp = parts[2].split("-").map(Number);
+    if (tp.length !== 9 || tp.some(function (v) { return !isFinite(v) || v < 0 || v > 100; })) return null;
+    const cp = parts[3].split("-").map(Number);
+    const confounds = {};
+    Object.keys(CONFOUNDS).forEach(function (k, i) {
+      confounds[k] = (isFinite(cp[i]) && cp[i] >= 0 && cp[i] <= 100) ? Math.round(cp[i]) : 0;
+    });
+    const types = tp.map(function (pct, i) { return { type: i + 1, pct: Math.round(pct) }; })
+      .sort(function (a, b) { return b.pct - a.pct || a.type - b.type; });
+    return { bank: parts[1], types: types, confounds: confounds };
+  }
+
+  function shareUrl() {
+    return location.origin + location.pathname + "?r=" + encodeResult(lastResult);
+  }
+
+  function shareResult() {
+    const top = lastResult.types[0];
+    const t = ENNEAGRAM_TYPES[top.type];
+    const wing = wingFor(top.type, lastResult.types);
+    const url = shareUrl();
+    const text = "I got Type " + top.type + " — " + t.name + " (" + wing.label + ") on the enneaguide enneagram test.";
+    const status = $("#share-status");
+    if (navigator.share) {
+      navigator.share({ title: "My enneagram result", text: text, url: url }).catch(function () {});
+    } else if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text + " " + url).then(function () {
+        status.textContent = "Link copied to clipboard.";
+      }, function () {
+        window.prompt("Copy this link to share your result:", url);
+      });
+    } else {
+      window.prompt("Copy this link to share your result:", url);
+    }
+  }
+
+  /* ---- PDF download: print-formatted report + the browser's Save as PDF ---- */
+
+  function buildPrintHtml(result) {
+    const top = result.types[0];
+    const second = result.types[1];
+    const t = ENNEAGRAM_TYPES[top.type];
+    const wing = wingFor(top.type, result.types);
+    const flags = buildFlags(result);
+    const date = new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+
+    let h = "";
+    h += '<p class="p-brand">enneaguide · enneagram test result · ' + esc(date) + "</p>";
+    h += "<h1>Type " + top.type + " — " + esc(t.name) + "</h1>";
+    h += "<p><strong>" + esc(BANKS[bankName].label) + "</strong> · Likely wing: <strong>" + esc(wing.label) +
+         "</strong> · Runner-up: Type " + second.type + " — " + esc(ENNEAGRAM_TYPES[second.type].name) + "</p>";
+    h += "<p>" + esc(t.summary) + "</p>";
+    if (wing.text) h += "<p><strong>Wing:</strong> " + esc(wing.text) + "</p>";
+    h += "<p><strong>Growth:</strong> " + esc(t.growthArrow.text) + "<br><strong>Stress:</strong> " + esc(t.stressArrow.text) + "</p>";
+
+    h += "<h2>Fit with all nine types</h2><table><thead><tr><th>Type</th><th>Score (0–100)</th><th></th></tr></thead><tbody>";
+    result.types.forEach(function (r) {
+      h += "<tr><td>Type " + r.type + " — " + esc(ENNEAGRAM_TYPES[r.type].name) + "</td><td>" + r.pct +
+           '</td><td class="p-track"><span class="p-bar" style="width:' + r.pct + '%"></span></td></tr>';
+    });
+    h += "</tbody></table>";
+
+    if (flags.length) {
+      h += "<h2>⚑ Possible mislabeling flags</h2>";
+      flags.forEach(function (f) {
+        h += "<p><strong>" + esc(f.scale.label) + " (screen score " + f.pct + "/100) — overlaps Type " +
+             f.hitTypes.join(" and Type ") + ".</strong> " + esc(f.scale.explain) + "</p>";
+      });
+    } else {
+      h += "<p><strong>No mislabeling flags were raised</strong> by the screening items.</p>";
+    }
+    h += '<p class="p-foot">This result is a self-observation hypothesis, not a measurement or a diagnosis. ' +
+         "It cannot detect or rule out ADHD, anxiety, depression, autism, PTSD, or any other condition. " +
+         "Full type profiles and the mislabelings guide: " + esc(location.origin + location.pathname.replace(/tests\.html$/, "")) + "</p>";
+    return h;
+  }
+
+  function downloadPdf() {
+    const area = $("#print-area");
+    area.innerHTML = buildPrintHtml(lastResult);
+    const prevTitle = document.title;
+    document.body.classList.add("print-result");
+    document.title = "enneagram-result-type-" + lastResult.types[0].type;
+    let done = false;
+    const cleanup = function () {
+      if (done) return;
+      done = true;
+      document.body.classList.remove("print-result");
+      document.title = prevTitle;
+    };
+    window.addEventListener("afterprint", cleanup, { once: true });
+    window.print();
+    setTimeout(cleanup, 3000);
+  }
+
   function showResults() {
     $("#progress-fill").style.width = "100%";
-    const result = computeScores();
+    renderResults(computeScores(), { shared: false });
+  }
+
+  function renderResults(result, opts) {
+    lastResult = result;
     const top = result.types[0];
     const second = result.types[1];
     const t = ENNEAGRAM_TYPES[top.type];
@@ -199,6 +313,11 @@
     const flags = buildFlags(result);
 
     let html = "";
+    if (opts.shared) {
+      html += '<div class="callout" style="margin-top:0"><p style="margin:0"><strong>Shared result.</strong> ' +
+        "Someone took this test and shared their outcome with you. Their answers stayed on their device — " +
+        "only the scores travel in the link.</p></div>";
+    }
     html += '<p class="kicker">' + BANKS[bankName].label + " result</p>";
     html += "<h2 style='margin-top:0'>Type " + top.type + " — " + esc(t.name) + "</h2>";
     html += '<p><span class="pill">Likely wing: ' + esc(wing.label) + '</span>' +
@@ -239,10 +358,15 @@
       html += '<div class="callout"><p><strong>No mislabeling flags raised.</strong> Your answers to the screening items didn\'t show the patterns that most commonly masquerade as enneagram types. As always, treat your result as a hypothesis to test against self-observation.</p></div>';
     }
 
-    if (bankName === "short" || bankName === "shortmc") {
+    if (!opts.shared && (bankName === "short" || bankName === "shortmc")) {
       html += '<p>Want more confidence — including per-type discriminator items and a fuller mislabeling screen? <a href="#" id="go-full">Take the exhaustive version →</a></p>';
     }
-    html += '<p><button class="btn ghost" id="btn-retake" type="button">Retake</button></p>';
+    html += '<div class="result-actions">' +
+      '<button class="btn" id="btn-pdf" type="button">Download PDF</button>' +
+      '<button class="btn" id="btn-share" type="button">Share result</button>' +
+      '<button class="btn ghost" id="btn-retake" type="button">' +
+        (opts.shared ? "Take the test yourself" : "Retake") + "</button>" +
+      '</div><p class="quiz-meta" id="share-status" role="status"></p>';
 
     $("#quiz").hidden = true;
     $("#results").hidden = false;
@@ -254,7 +378,10 @@
       e.preventDefault();
       startQuiz(bankName === "shortmc" ? "fullmc" : "full");
     });
+    $("#btn-pdf").addEventListener("click", downloadPdf);
+    $("#btn-share").addEventListener("click", shareResult);
     $("#btn-retake").addEventListener("click", function () {
+      if (opts.shared) history.replaceState(null, "", location.pathname);
       $("#results").hidden = true;
       $("#chooser").hidden = false;
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -269,5 +396,17 @@
     $("#btn-back").addEventListener("click", function () {
       if (idx > 0) { idx -= 1; renderQuestion(); }
     });
+
+    // A shared-result link renders the encoded scores read-only.
+    const token = new URLSearchParams(location.search).get("r");
+    if (token) {
+      const decoded = decodeResult(token);
+      if (decoded) {
+        bankName = decoded.bank;
+        $("#chooser").hidden = true;
+        $("#results").hidden = false;
+        renderResults(decoded, { shared: true });
+      }
+    }
   });
 })();
