@@ -62,6 +62,9 @@
   function renderQuestion() {
     const q = bank[idx];
     $("#q-count").textContent = "Question " + (idx + 1) + " of " + bank.length;
+    $("#q-hint").textContent = q.options
+      ? "Pick the one answer that fits you best:"
+      : "How much do you agree with this statement?";
     $("#q-text").textContent = q.text;
     $("#progress-fill").style.width = (100 * idx / bank.length) + "%";
 
