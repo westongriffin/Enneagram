@@ -80,8 +80,9 @@ body {
   /* Soft color washes at the top of every page keep the site feeling lively;
      they fade into the plain page color as you scroll. */
   background:
-    radial-gradient(70rem 26rem at 12% -4%, color-mix(in srgb, var(--c-head) 9%, transparent), transparent 62%),
-    radial-gradient(60rem 24rem at 88% -6%, color-mix(in srgb, var(--c-heart) 8%, transparent), transparent 62%),
+    radial-gradient(70rem 26rem at 12% -4%, color-mix(in srgb, var(--c-head) 13%, transparent), transparent 62%),
+    radial-gradient(60rem 24rem at 88% -6%, color-mix(in srgb, var(--c-heart) 11%, transparent), transparent 62%),
+    radial-gradient(50rem 20rem at 50% -10%, color-mix(in srgb, var(--c-body) 7%, transparent), transparent 60%),
     var(--page);
   color: var(--ink);
   font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -105,15 +106,32 @@ hr { border: none; border-top: 1px solid var(--hairline); margin: 2rem 0; }
 /* Anchor targets clear the sticky header */
 section[id], [id^="type-"], h1[id], h2[id], h3[id] { scroll-margin-top: 4.5rem; }
 
-/* Section headers get a short accent rule */
+/* Section headers get a short tri-color rule */
 main > h2::before, main h2.ruled::before {
   content: "";
   display: block;
-  width: 2.25rem; height: 4px;
+  width: 2.75rem; height: 4px;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--accent), var(--c-heart));
+  background: linear-gradient(90deg, var(--c-head), var(--c-heart), var(--c-body));
   margin-bottom: 0.6rem;
 }
+
+/* Page titles carry a subtle ink→accent gradient */
+@supports (-webkit-background-clip: text) or (background-clip: text) {
+  h1 {
+    background: linear-gradient(105deg, var(--ink) 45%, var(--accent) 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: var(--accent);
+  }
+}
+
+/* Rotating center-color stripes for generic card grids */
+.grid.rainbow > .card:nth-child(3n + 1) { border-top: 4px solid var(--c-head); }
+.grid.rainbow > .card:nth-child(3n + 2) { border-top: 4px solid var(--c-heart); }
+.grid.rainbow > .card:nth-child(3n) { border-top: 4px solid var(--c-body); }
+.grid.rainbow > .card:nth-child(3n + 1) .kicker { color: var(--c-head-deep); }
+.grid.rainbow > .card:nth-child(3n + 2) .kicker { color: var(--c-heart-deep); }
+.grid.rainbow > .card:nth-child(3n) .kicker { color: var(--c-body-deep); }
 
 /* ---------- Header / nav ---------- */
 header.site {
@@ -405,6 +423,22 @@ details summary:hover { color: var(--accent); }
 .pair-score { margin-top: 0.5rem; }
 .pair-num { font-size: 3rem; font-weight: 800; letter-spacing: -0.03em; }
 .pair-outof { color: var(--muted); font-weight: 600; margin-left: 0.25rem; }
+.pair-band {
+  display: inline-block; vertical-align: 0.9rem; margin-left: 0.6rem;
+  font-size: 0.85rem; font-weight: 700; letter-spacing: 0.01em;
+  padding: 0.25rem 0.8rem; border-radius: 999px;
+}
+.pair-desc { margin: 0.35rem 0 0.15rem; color: var(--ink-2); }
+.pair-desc strong { color: var(--ink); }
+.heat-legend {
+  display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem;
+  font-size: 0.85rem; color: var(--ink-2); margin: 0.75rem 0 0;
+}
+.heat-legend i {
+  display: inline-block; width: 0.85em; height: 0.85em;
+  border-radius: 3px; margin-right: 0.4em; vertical-align: -0.07em;
+  border: 1px solid var(--border);
+}
 .pair-meter {
   height: 10px; background: var(--hairline); border-radius: 999px;
   overflow: hidden; margin: 0.4rem 0 0.25rem; max-width: 26rem;

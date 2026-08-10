@@ -88,9 +88,10 @@
         <caption>Compatibility base score by type pair — by design the scores span 62 (most default friction) to 85 (most naturally complementary)</caption>
       </table>
     </div>
+    <p class="heat-legend" id="heat-legend"></p>
 
     <h2>What actually predicts a good relationship</h2>
-    <div class="grid cols-3">
+    <div class="grid cols-3 rainbow">
       <div class="card">
         <p class="kicker">Health level</p>
         <p>Every type has healthy, average, and unhealthy versions. A healthy Eight is a devoted
@@ -163,6 +164,37 @@
         if ([...sel.options].some(o => o.value === prev)) sel.value = prev;
       }
 
+      /* Five score bands, shared by the result descriptor, the heatmap
+         colors, and the legend. Colors are steps of the blue sequential ramp. */
+      const SCORE_BANDS = [
+        { min: 82, label: "Most compatible", note: "naturally complementary defaults", bg: "#104281", ink: "#fff" },
+        { min: 77, label: "Highly compatible", note: "strong default chemistry", bg: "#256abf", ink: "#fff" },
+        { min: 72, label: "Compatible", note: "ordinary, workable friction", bg: "#5598e7", ink: "#0b0b0b" },
+        { min: 68, label: "Somewhat compatible", note: "real work required, real payoff", bg: "#9ec5f4", ink: "#0b0b0b" },
+        { min: -Infinity, label: "Least compatible", note: "a growth pairing — the friction is the curriculum", bg: "#cde2fb", ink: "#0b0b0b" }
+      ];
+      function bandFor(s) {
+        return SCORE_BANDS.find(function (b) { return s >= b.min; });
+      }
+
+      /* True attainable range of the final score (base + wings + instincts),
+         brute-forced from the data so the meter's endpoints are honest. */
+      let MIN_FINAL = Infinity, MAX_FINAL = -Infinity;
+      (function () {
+        const deltas = [-2, 0, 3];
+        for (let a = 1; a <= 9; a++) for (let b = 1; b <= 9; b++) {
+          const was = ["balanced", String(WING_NEIGHBORS[a][0]), String(WING_NEIGHBORS[a][1])];
+          const wbs = ["balanced", String(WING_NEIGHBORS[b][0]), String(WING_NEIGHBORS[b][1])];
+          was.forEach(function (wa) { wbs.forEach(function (wb) {
+            const s = Math.round(wingAdjusted(a, wa, b, wb));
+            deltas.forEach(function (d) {
+              MIN_FINAL = Math.min(MIN_FINAL, s + d);
+              MAX_FINAL = Math.max(MAX_FINAL, s + d);
+            });
+          }); });
+        }
+      })();
+
       function badges(a, b) {
         const out = [];
         if (a === b) out.push("Same type — deep understanding, doubled blind spots");
@@ -190,15 +222,19 @@
           : "wings " + (wingDelta > 0 ? "+" : "−") + Math.abs(wingDelta));
         if (instinct) parts.push("instincts " + (instinct.delta >= 0 ? "+" : "−") + Math.abs(instinct.delta));
         const deltaText = parts.join(" · ");
-        // Scores are authored on a deliberate 60–90 band; the meter spans that
-        // band so differences between pairings stay visible.
-        const meterPct = Math.max(0, Math.min(100, (adj - 60) / 30 * 100));
+        // The meter spans the true attainable range, so the best possible
+        // pairing fills the bar and the most challenged one nearly empties it.
+        const meterPct = Math.max(0, Math.min(100, (adj - MIN_FINAL) / (MAX_FINAL - MIN_FINAL) * 100));
+        const band = bandFor(adj);
 
         let h = "";
-        h += '<div class="pair-score"><span class="pair-num">' + adj + '</span><span class="pair-outof">compatibility</span>' +
+        h += '<div class="pair-score"><span class="pair-num">' + adj + '</span>' +
+             '<span class="pair-band" style="background:' + band.bg + ";color:" + band.ink + '">' + band.label + "</span>" +
              '<div class="pair-meter"><span style="width:' + meterPct + '%"></span></div>' +
-             '<p class="quiz-meta">Base pairing ' + base + " · " + deltaText +
-             " · scores run ~62–85 by design: no pairing is doomed, none is effortless</p></div>";
+             '<p class="pair-desc"><strong>' + band.label + "</strong> — " + band.note + "</p>" +
+             '<p class="quiz-meta">Base pairing ' + base + " (62–85 band) · " + deltaText +
+             " · with wings and instincts, final scores span " + MIN_FINAL + "–" + MAX_FINAL +
+             ": no pairing is doomed, none is effortless</p></div>";
         h += "<h3 style='margin-top:1rem'>" + p.t + "</h3>";
         h += "<p>" + p.blurb + "</p>";
         const bl = badges(a, b);
@@ -214,9 +250,7 @@
       }
 
       function buildHeatmap() {
-        // Sequential single-hue bands; every cell direct-labeled with its score.
-        const band = (s) => s >= 85 ? ["#184f95", "#fff"] : s >= 80 ? ["#256abf", "#fff"]
-          : s >= 74 ? ["#5598e7", "#0b0b0b"] : s >= 68 ? ["#9ec5f4", "#0b0b0b"] : ["#cde2fb", "#0b0b0b"];
+        // Cells share the exact band colors and labels used by the descriptor.
         let h = "<thead><tr><th scope='col'></th>";
         for (let c = 1; c <= 9; c++) h += "<th scope='col'>" + c + "</th>";
         h += "</tr></thead><tbody>";
@@ -224,14 +258,19 @@
           h += "<tr><th scope='row'>" + r + "</th>";
           for (let c = 1; c <= 9; c++) {
             const s = baseScore(r, c);
-            const bc = band(s);
+            const bc = bandFor(s);
             h += '<td><button type="button" data-a="' + r + '" data-b="' + c +
-                 '" style="background:' + bc[0] + ";color:" + bc[1] + '">' + s + "</button></td>";
+                 '" title="' + bc.label + '" style="background:' + bc.bg + ";color:" + bc.ink + '">' + s + "</button></td>";
           }
           h += "</tr>";
         }
         h += "</tbody>";
         $("#heatmap").innerHTML = "<caption>Compatibility base score by type pair — by design the scores span 62 (most default friction) to 85 (most naturally complementary)</caption>" + h;
+        $("#heat-legend").innerHTML = SCORE_BANDS.slice().reverse().map(function (b, i, arr) {
+          const lo = b.min === -Infinity ? 62 : b.min;
+          const hi = i === arr.length - 1 ? 85 : arr[i + 1].min - 1;
+          return '<span><i style="background:' + b.bg + '"></i>' + b.label + " (" + lo + "–" + hi + ")</span>";
+        }).join("");
         $("#heatmap").addEventListener("click", function (e) {
           const btn = e.target.closest("button[data-a]");
           if (!btn) return;
