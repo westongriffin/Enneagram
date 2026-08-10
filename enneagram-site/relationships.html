@@ -18,6 +18,7 @@
         <a href="index.html">Overview</a>
         <a href="types.html">Types</a>
         <a href="mislabelings.html">Mislabelings</a>
+        <a href="instincts.html">Instincts</a>
         <a href="relationships.html" aria-current="page">Pairings</a>
         <a href="similarities.html">Similarities</a>
         <a href="tests.html">Tests</a>
@@ -30,8 +31,8 @@
     <p>
       Pick your type and wing, then your partner's (or crush's — we won't tell), and get the
       pairing's compatibility score, what sparks it, where it grinds, and how it grows. Wings
-      genuinely shift the chemistry: a 9w8 with an 8 is a different relationship than a 9w1 with
-      the same 8, and the score reflects that.
+      shift the chemistry, and so do <a href="instincts.html">instincts</a> — shared dominant
+      instincts often predict day-to-day compatibility better than type does.
     </p>
     <div class="callout">
       <p><strong>Read this first:</strong> compatibility scores describe the <em>default</em>
@@ -48,12 +49,24 @@
           <legend>You</legend>
           <label>Type <select id="a-type"></select></label>
           <label>Wing <select id="a-wing"></select></label>
+          <label>Dominant instinct <select id="a-inst">
+            <option value="">Not sure / skip</option>
+            <option value="sp">sp — Self-Preservation</option>
+            <option value="so">so — Social</option>
+            <option value="sx">sx — Sexual (One-to-One)</option>
+          </select></label>
         </fieldset>
         <div class="pair-heart" aria-hidden="true">♥</div>
         <fieldset>
           <legend>Your partner</legend>
           <label>Type <select id="b-type"></select></label>
           <label>Wing <select id="b-wing"></select></label>
+          <label>Dominant instinct <select id="b-inst">
+            <option value="">Not sure / skip</option>
+            <option value="sp">sp — Self-Preservation</option>
+            <option value="so">so — Social</option>
+            <option value="sx">sx — Sexual (One-to-One)</option>
+          </select></label>
         </fieldset>
       </div>
       <div id="pair-result"></div>
@@ -100,6 +113,7 @@
 
   <script src="js/data.js"></script>
   <script src="js/pairs.js"></script>
+  <script src="js/instincts.js"></script>
   <script>
     (function () {
       "use strict";
@@ -155,12 +169,18 @@
       function render() {
         const a = Number($("#a-type").value), b = Number($("#b-type").value);
         const wa = $("#a-wing").value, wb = $("#b-wing").value;
+        const ia = $("#a-inst").value, ib = $("#b-inst").value;
         const p = PAIRS[pairKey(a, b)];
         const base = p.s;
-        const adj = Math.round(wingAdjusted(a, wa, b, wb));
-        const delta = adj - base;
-        const deltaText = delta === 0 ? "wings leave the base score unchanged"
-          : "wings " + (delta > 0 ? "add " : "subtract ") + Math.abs(delta) + (delta > 0 ? " points" : "");
+        const wingScore = Math.round(wingAdjusted(a, wa, b, wb));
+        const wingDelta = wingScore - base;
+        const instinct = (ia && ib) ? INSTINCT_PAIRS[instinctPairKey(ia, ib)] : null;
+        const adj = wingScore + (instinct ? instinct.delta : 0);
+        const parts = [];
+        parts.push(wingDelta === 0 ? "wings ±0"
+          : "wings " + (wingDelta > 0 ? "+" : "−") + Math.abs(wingDelta));
+        if (instinct) parts.push("instincts " + (instinct.delta >= 0 ? "+" : "−") + Math.abs(instinct.delta));
+        const deltaText = parts.join(" · ");
         const meterPct = Math.max(0, Math.min(100, (adj - 50) * 2));
 
         let h = "";
@@ -174,6 +194,7 @@
         h += "<p><strong>The spark:</strong> " + p.spark + "</p>";
         h += "<p><strong>The friction:</strong> " + p.friction + "</p>";
         h += "<p><strong>How it grows:</strong> " + p.growth + "</p>";
+        if (instinct) h += "<p><strong>Instincts (" + ia + " + " + ib + "):</strong> " + instinct.note + "</p>";
         h += '<p class="quiz-meta">Profiles: <a href="types.html#type-' + a + '">Type ' + a + "</a> · " +
              '<a href="types.html#type-' + b + '">Type ' + b + "</a> · " +
              '<a href="similarities.html?a=' + a + "&b=" + b + '">How these two are similar →</a></p>';
@@ -222,7 +243,7 @@
           render();
         });
       });
-      ["a-wing", "b-wing"].forEach(function (id) {
+      ["a-wing", "b-wing", "a-inst", "b-inst"].forEach(function (id) {
         $("#" + id).addEventListener("change", render);
       });
       buildHeatmap();
