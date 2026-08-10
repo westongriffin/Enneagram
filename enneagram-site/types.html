@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>The Nine Types — enneaguide</title>
   <meta name="description" content="Full profiles of all nine enneagram types: core fears and desires, wings, growth and stress arrows, and the mislabelings each type attracts.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='44' fill='none' stroke='%232a78d6' stroke-width='7'/%3E%3Cpath d='M50 14 L81 68 L19 68 Z' fill='none' stroke='%231baf7a' stroke-width='7' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <meta name="theme-color" content="#f9f9f7" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0d0d0d" media="(prefers-color-scheme: dark)">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -27,7 +30,7 @@
       virtue it grows toward, both wings, both arrows — and the mislabelings that most often send
       people to the wrong number. Jump to a type:
     </p>
-    <p id="type-jump"></p>
+    <nav id="type-jump" class="type-jump" aria-label="Jump to type"></nav>
     <div id="type-list"></div>
   </main>
 
@@ -40,14 +43,21 @@
   <script src="js/data.js"></script>
   <script>
     (function () {
+      function centerClass(t) {
+        if (t.center.indexOf("Body") === 0) return "center-body";
+        if (t.center.indexOf("Heart") === 0) return "center-heart";
+        return "center-head";
+      }
       const jump = [];
       const wrap = document.getElementById("type-list");
       for (let n = 1; n <= 9; n++) {
         const t = ENNEAGRAM_TYPES[n];
-        jump.push('<a href="#type-' + n + '">' + n + ' · ' + t.name.replace("The ", "") + '</a>');
+        const cc = centerClass(t);
+        jump.push('<a href="#type-' + n + '"><span class="type-num ' + cc + '">' + n + '</span>' +
+                  t.name.replace("The ", "") + '</a>');
 
         const sec = document.createElement("section");
-        sec.className = "card";
+        sec.className = "card " + cc;
         sec.id = "type-" + n;
 
         const wingKeys = Object.keys(t.wings);
@@ -81,7 +91,14 @@
           '</details>';
         wrap.appendChild(sec);
       }
-      document.getElementById("type-jump").innerHTML = jump.join(" &nbsp;·&nbsp; ");
+      document.getElementById("type-jump").innerHTML = jump.join("");
+
+      // Content is injected after parse, so the browser's native anchor jump
+      // fires before the target exists — redo it now that the sections are in.
+      if (location.hash) {
+        const target = document.getElementById(location.hash.slice(1));
+        if (target) target.scrollIntoView({ behavior: "instant", block: "start" });
+      }
     })();
   </script>
 </body>
