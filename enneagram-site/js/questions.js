@@ -140,6 +140,235 @@ const FULL_TEST = [
   { text: "Around social events I'm consumed by fear of humiliation — dreading beforehand, replaying mistakes afterward.", c: { socialanx: 1 } }
 ];
 
+/* ---------------------------------------------------------------------------
+ * Multiple-choice banks.
+ * Each item: { text, options: [{ label, w, c }, ...] } — picking an option adds
+ * its full weights. Discriminator items put a type and its clinical look-alike
+ * side by side, which forced choice does better than agreement ratings.
+ */
+
+const MC_CORE = [
+  { text: "A group project is falling apart the week before the deadline. My honest first instinct:",
+    options: [
+      { label: "Take command, divide the work, and push it over the line.", w: { 8: 1 } },
+      { label: "Quietly redo the weak parts myself so it's done properly.", w: { 1: 1 } },
+      { label: "Lift the mood — panic helps nobody, and there's still an enjoyable way through this.", w: { 7: 1 } },
+      { label: "Check in on whoever's overwhelmed and cover their pieces.", w: { 2: 1 } }
+    ] },
+  { text: "What bothers me most in everyday life:",
+    options: [
+      { label: "Carelessness and lowered standards.", w: { 1: 1 } },
+      { label: "Being told what to do.", w: { 8: 1 } },
+      { label: "Giving a lot and getting no thanks.", w: { 2: 1 } },
+      { label: "Boredom and repetition.", w: { 7: 1 } },
+      { label: "Small talk and constant socializing.", w: { 5: 1 } }
+    ] },
+  { text: "At a gathering where I know few people, I usually:",
+    options: [
+      { label: "Stay near the person I came with.", w: { 6: 1 } },
+      { label: "Leave early — my social battery drains fast.", w: { 5: 1 } },
+      { label: "Adapt to whoever I'm talking to; people generally like me.", w: { 3: 1 } },
+      { label: "Drift into whatever conversation is easiest and go along with it.", w: { 9: 1 } }
+    ] },
+  { text: "My relationship with rules:",
+    options: [
+      { label: "Rules exist for good reasons; I follow them and quietly expect others to.", w: { 1: 1, 6: 0.3 } },
+      { label: "Rules that slow me down are obstacles to work around.", w: { 3: 1, 7: 0.3 } },
+      { label: "I follow rules from people I trust and question the rest.", w: { 6: 1 } },
+      { label: "Rules barely register; I do whatever keeps things pleasant.", w: { 9: 1 } }
+    ] },
+  { text: "When someone close to me is upset with me:",
+    options: [
+      { label: "I can't rest until we've repaired it — I'll over-apologize if I have to.", w: { 2: 1, 9: 0.3 } },
+      { label: "I get defensive first and soften later, in private.", w: { 8: 1 } },
+      { label: "I replay everything I might have done wrong on a loop.", w: { 6: 1, 1: 0.3 } },
+      { label: "Part of me withdraws to process what this says about us.", w: { 4: 1, 5: 0.3 } }
+    ] },
+  { text: "My mind's default background activity:",
+    options: [
+      { label: "Scanning for what could go wrong.", w: { 6: 1 } },
+      { label: "Planning the next thing to look forward to.", w: { 7: 1 } },
+      { label: "Rehearsing or reviewing my own performance.", w: { 3: 1 } },
+      { label: "Drifting through comfortable daydreams.", w: { 9: 1 } }
+    ] },
+  { text: "What I'd most like people to say about me:",
+    options: [
+      { label: "\"Principled — they do the right thing even when it costs them.\"", w: { 1: 1 } },
+      { label: "\"Impressive — they make success look easy.\"", w: { 3: 1 } },
+      { label: "\"Deep — there's no one else like them.\"", w: { 4: 1 } },
+      { label: "\"Strong — they protected us.\"", w: { 8: 1 } }
+    ] },
+  { text: "A free Saturday with no obligations. I'm most likely to:",
+    options: [
+      { label: "Recharge alone with my current obsession.", w: { 5: 1 } },
+      { label: "Line up something new and stimulating.", w: { 7: 1 } },
+      { label: "Finally make the improvements I've been meaning to get to.", w: { 1: 1, 3: 0.3 } },
+      { label: "Sink into low-key comfort: familiar food, familiar people, no plans.", w: { 9: 1 } }
+    ] },
+  { text: "My biggest fear, honestly:",
+    options: [
+      { label: "That I'm only loved for what I do for people.", w: { 2: 1 } },
+      { label: "That without my achievements I'd be nothing.", w: { 3: 1 } },
+      { label: "That something essential is missing in me.", w: { 4: 1 } },
+      { label: "That I'll be left without support when it really matters.", w: { 6: 1 } }
+    ] },
+  { text: "Under sustained pressure I become:",
+    options: [
+      { label: "Sharper and more controlling.", w: { 8: 1, 1: 0.3 } },
+      { label: "Busier — I outrun stress with activity.", w: { 3: 1, 7: 0.3 } },
+      { label: "Withdrawn — I need space to think.", w: { 5: 1 } },
+      { label: "Scattered and reassurance-seeking.", w: { 6: 1 } }
+    ] },
+  { text: "People who love me sometimes complain that I:",
+    options: [
+      { label: "Meddle or smother.", w: { 2: 1 } },
+      { label: "Nitpick or moralize.", w: { 1: 1 } },
+      { label: "Steamroll.", w: { 8: 1 } },
+      { label: "Space out and avoid.", w: { 9: 1 } },
+      { label: "Live in my feelings too much.", w: { 4: 1 } }
+    ] }
+];
+
+const MC_EXTRA = [
+  { text: "When I receive pointed criticism:",
+    options: [
+      { label: "I measure it against my own standards — if it's right, it stings for days.", w: { 1: 1 } },
+      { label: "I look unbothered and privately rework my image around it.", w: { 3: 1 } },
+      { label: "It confirms things I already suspected were defective in me.", w: { 4: 1 } },
+      { label: "I counterattack or dismiss the source.", w: { 8: 1 } },
+      { label: "I go quiet and agreeable — then do what I wanted anyway.", w: { 9: 1 } }
+    ] },
+  { text: "My relationship with my own needs:",
+    options: [
+      { label: "I know what I need and I take it.", w: { 8: 1 } },
+      { label: "I discover my needs late — often only after burnout.", w: { 2: 1, 9: 0.3 } },
+      { label: "I keep my needs small so I owe nothing to anyone.", w: { 5: 1 } },
+      { label: "They feel bottomless, so sometimes I dramatize them.", w: { 4: 1 } }
+    ] },
+  { text: "In close relationships, my recurring pattern:",
+    options: [
+      { label: "I test loyalty and read commitment signals constantly.", w: { 6: 1 } },
+      { label: "I idealize, then feel let down by ordinary reality.", w: { 4: 1, 7: 0.3 } },
+      { label: "I merge — their preferences quietly become mine.", w: { 9: 1, 2: 0.3 } },
+      { label: "I stay busy enough that depth has to catch me in motion.", w: { 3: 1, 7: 0.5 } }
+    ] },
+  { text: "When plans collapse at the last minute:",
+    options: [
+      { label: "Honestly? Relieved — more space for me.", w: { 5: 1, 9: 0.3 } },
+      { label: "Annoyed — I'd structured everything around them.", w: { 1: 1, 6: 0.3 } },
+      { label: "Already generating a better alternative.", w: { 7: 1 } },
+      { label: "Checking whether anyone's disappointed and needs support.", w: { 2: 1 } }
+    ] },
+  { text: "My anger:",
+    options: [
+      { label: "Fast, clean, and over quickly.", w: { 8: 1 } },
+      { label: "Simmers as irritation at carelessness.", w: { 1: 1 } },
+      { label: "Comes out as tears or brooding more than heat.", w: { 4: 1 } },
+      { label: "Rarely surfaces — I go pleasant and immovable instead.", w: { 9: 1 } }
+    ] },
+  { text: "How I make big decisions:",
+    options: [
+      { label: "Fast — I correct course later.", w: { 8: 1, 7: 0.3, 3: 0.3 } },
+      { label: "I research until the decision makes itself.", w: { 5: 1, 6: 0.3 } },
+      { label: "I canvass people I trust first.", w: { 6: 1, 2: 0.3 } },
+      { label: "I postpone until circumstances decide for me.", w: { 9: 1 } }
+    ] },
+  { text: "My work style:",
+    options: [
+      { label: "Efficient and image-aware — results that show.", w: { 3: 1 } },
+      { label: "Meticulous — right beats fast.", w: { 1: 1 } },
+      { label: "Mood-dependent — inspired or nothing.", w: { 4: 1 } },
+      { label: "Parallel projects, strong starts, easily bored.", w: { 7: 1 } },
+      { label: "Steady and supportive — I keep the team comfortable.", w: { 9: 1, 2: 0.3 } }
+    ] },
+  { text: "What exhausts me most:",
+    options: [
+      { label: "Emotional demands and intrusions on my time.", w: { 5: 1 } },
+      { label: "Chaos and lowered standards.", w: { 1: 1 } },
+      { label: "Conflict and pressure to take sides.", w: { 9: 1 } },
+      { label: "Slowness — meetings, waiting, repetition.", w: { 3: 1, 7: 0.3, 8: 0.3 } }
+    ] },
+  { text: "My self-respect quietly depends on being:",
+    options: [
+      { label: "Needed and appreciated.", w: { 2: 1 } },
+      { label: "Competent and knowledgeable.", w: { 5: 1 } },
+      { label: "Prepared, safe, and backed up.", w: { 6: 1 } },
+      { label: "Free — no cages, no missed experiences.", w: { 7: 1 } }
+    ] },
+  { text: "When I meet someone genuinely impressive:",
+    options: [
+      { label: "I compare, and feel the gap.", w: { 4: 1, 3: 0.3 } },
+      { label: "I study how they got there.", w: { 3: 1, 5: 0.3 } },
+      { label: "I test whether they're solid or bluffing.", w: { 8: 1, 6: 0.3 } },
+      { label: "I look for what they might need from me.", w: { 2: 1 } }
+    ] },
+  { text: "The compliment that would land deepest:",
+    options: [
+      { label: "\"You make everything better for everyone around you.\"", w: { 2: 1, 9: 0.3 } },
+      { label: "\"You see what no one else sees.\"", w: { 4: 1, 5: 0.3 } },
+      { label: "\"Nothing gets past you — you kept us out of trouble.\"", w: { 6: 1, 1: 0.3 } },
+      { label: "\"Life is bigger and brighter when you're around.\"", w: { 7: 1 } }
+    ] }
+];
+
+/* Discriminators: a type and its look-alike side by side. */
+const MC_DISC_CORE = [
+  { text: "Which is closer to your relationship with focus?",
+    options: [
+      { label: "I can focus deeply on what matters to me; I scatter mainly to escape boredom or pain.", w: { 7: 0.5 } },
+      { label: "My focus fails everywhere — even on things I love — and it's been that way since childhood.", c: { adhd: 1 } },
+      { label: "Neither — sustained focus is generally fine for me.", w: {} }
+    ] },
+  { text: "Which is closer to your relationship with worry?",
+    options: [
+      { label: "My vigilance feels like wisdom — being prepared works, and I mostly endorse it.", w: { 6: 0.5 } },
+      { label: "My worry feels like an affliction — physical, uncontrollable, often irrational by my own judgment.", c: { anxiety: 1 } },
+      { label: "Neither — I'm not particularly vigilant or worried.", w: {} }
+    ] },
+  { text: "Which is closer to your experience of low moods?",
+    options: [
+      { label: "Melancholy or placid lowness is my lifelong temperament, and it coexists with real enjoyment.", w: { 4: 0.3, 9: 0.2 } },
+      { label: "Low periods descend like an illness — weeks of losing interest in everything, with sleep or appetite changes.", c: { depression: 1 } },
+      { label: "Neither really fits me.", w: {} }
+    ] }
+];
+
+const MC_DISC_FULL = [
+  { text: "Socially, which is truest?",
+    options: [
+      { label: "I read social currents fine — I just find them draining, so I retreat to conserve energy.", w: { 5: 0.5 } },
+      { label: "Unwritten social rules have never come naturally — I've studied them deliberately, and intense sensory environments can genuinely overwhelm me.", c: { autism: 1 } },
+      { label: "Neither — socializing is fairly natural and fine.", w: {} }
+    ] },
+  { text: "My guardedness or vigilance:",
+    options: [
+      { label: "Feels like native temperament — no particular origin, just how I've always met the world.", w: { 6: 0.3, 8: 0.2 } },
+      { label: "Has a clear before-and-after: it began with overwhelming events, and reminders still set me off.", c: { trauma: 1 } },
+      { label: "I'm not especially guarded.", w: {} }
+    ] },
+  { text: "My standards:",
+    options: [
+      { label: "Are ideals I believe in — high, but I can flex them when life requires it.", w: { 1: 0.5 } },
+      { label: "Are rules and rituals I can't skip without intense discomfort, even when I agree they're hurting me.", c: { ocpd: 1 } },
+      { label: "I'm fairly relaxed about standards.", w: {} }
+    ] },
+  { text: "When I avoid social situations, it's usually because:",
+    options: [
+      { label: "I'd rather protect my time, energy, or peace.", w: { 5: 0.3, 9: 0.2 } },
+      { label: "I want to go, but fear of embarrassment stops me — and I replay my missteps for days afterward.", c: { socialanx: 1 } },
+      { label: "I don't often avoid social situations.", w: {} }
+    ] },
+  { text: "My upbeat, high-energy stretches:",
+    options: [
+      { label: "Are my normal setting — steady across months and years.", w: { 7: 0.4 } },
+      { label: "Come in episodes with noticeably less need for sleep and racing thoughts, unlike my usual self.", c: { hypomania: 1 } },
+      { label: "Neither — my energy is fairly even or on the low side.", w: {} }
+    ] }
+];
+
+const SHORT_MC = [...MC_CORE, ...MC_DISC_CORE];
+const FULL_MC = [...MC_CORE, ...MC_EXTRA, ...MC_DISC_CORE, ...MC_DISC_FULL];
+
 if (typeof module !== "undefined") {
-  module.exports = { SHORT_TEST, FULL_TEST };
+  module.exports = { SHORT_TEST, FULL_TEST, SHORT_MC, FULL_MC };
 }

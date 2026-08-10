@@ -301,6 +301,10 @@ details summary:hover { color: var(--accent); }
   .likert { grid-template-columns: 1fr; gap: 0.55rem; }
   .likert button { font-size: 0.95rem; padding: 0.8rem 1rem; text-align: left; }
 }
+/* Multiple-choice items: options are sentences — always one per row. */
+.likert.mc { grid-template-columns: 1fr; gap: 0.55rem; }
+.likert.mc button { font-size: 0.95rem; padding: 0.8rem 1rem; text-align: left; }
+.format-row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.5rem; }
 .quiz-nav { display: flex; align-items: center; justify-content: space-between; margin-top: 1.5rem; gap: 1rem; }
 .quiz-nav .btn { flex: none; }
 .quiz-meta { color: var(--muted); font-size: 0.85rem; }

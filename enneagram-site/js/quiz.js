@@ -12,6 +12,13 @@
     "Strongly agree"
   ];
 
+  const BANKS = {
+    short: { items: function () { return SHORT_TEST; }, label: "Quick test" },
+    full: { items: function () { return FULL_TEST; }, label: "Exhaustive test" },
+    shortmc: { items: function () { return SHORT_MC; }, label: "Quick multiple-choice test" },
+    fullmc: { items: function () { return FULL_MC; }, label: "Exhaustive multiple-choice test" }
+  };
+
   // A confound scale at or above this (0–100) is considered elevated.
   const CONFOUND_THRESHOLD = 60;
   // A mimicked type within this many points of the top score keeps a flag relevant.
@@ -38,7 +45,11 @@
 
   function startQuiz(which) {
     bankName = which;
-    bank = shuffle(which === "short" ? SHORT_TEST : FULL_TEST);
+    // Shuffle question order; for multiple-choice items also shuffle the
+    // options (on a copy) so option position carries no signal.
+    bank = shuffle(BANKS[which].items()).map(function (q) {
+      return q.options ? Object.assign({}, q, { options: shuffle(q.options) }) : q;
+    });
     answers = new Array(bank.length).fill(null);
     idx = 0;
     $("#chooser").hidden = true;
@@ -56,7 +67,9 @@
 
     const wrap = $("#likert");
     wrap.innerHTML = "";
-    LIKERT.forEach(function (label, i) {
+    const labels = q.options ? q.options.map(function (o) { return o.label; }) : LIKERT;
+    wrap.classList.toggle("mc", !!q.options);
+    labels.forEach(function (label, i) {
       const b = document.createElement("button");
       b.type = "button";
       b.textContent = label;
@@ -93,6 +106,21 @@
     bank.forEach(function (q, i) {
       const a = answers[i];
       if (a == null) return;
+      if (q.options) {
+        // Forced choice: the chosen option contributes its full weights; the
+        // ceiling for each scale is the best any option could have given it.
+        const picked = q.options[a - 1];
+        if (picked.w) Object.keys(picked.w).forEach(function (t) { typeScore[t] += picked.w[t]; });
+        if (picked.c) Object.keys(picked.c).forEach(function (k) { confScore[k] += picked.c[k]; });
+        const bestW = {}, bestC = {};
+        q.options.forEach(function (o) {
+          if (o.w) Object.keys(o.w).forEach(function (t) { bestW[t] = Math.max(bestW[t] || 0, o.w[t]); });
+          if (o.c) Object.keys(o.c).forEach(function (k) { bestC[k] = Math.max(bestC[k] || 0, o.c[k]); });
+        });
+        Object.keys(bestW).forEach(function (t) { typeMax[t] += bestW[t]; });
+        Object.keys(bestC).forEach(function (k) { confMax[k] += bestC[k]; });
+        return;
+      }
       const s = (a - 1) / 4; // 0..1
       if (q.w) Object.keys(q.w).forEach(function (t) {
         typeScore[t] += s * q.w[t];
@@ -168,7 +196,7 @@
     const flags = buildFlags(result);
 
     let html = "";
-    html += '<p class="kicker">' + (bankName === "short" ? "Quick test" : "Exhaustive test") + " result</p>";
+    html += '<p class="kicker">' + BANKS[bankName].label + " result</p>";
     html += "<h2 style='margin-top:0'>Type " + top.type + " — " + esc(t.name) + "</h2>";
     html += '<p><span class="pill">Likely wing: ' + esc(wing.label) + '</span>' +
             '<span class="pill">Runner-up: Type ' + second.type + " — " + esc(ENNEAGRAM_TYPES[second.type].name) + "</span></p>";
@@ -208,8 +236,8 @@
       html += '<div class="callout"><p><strong>No mislabeling flags raised.</strong> Your answers to the screening items didn\'t show the patterns that most commonly masquerade as enneagram types. As always, treat your result as a hypothesis to test against self-observation.</p></div>';
     }
 
-    if (bankName === "short") {
-      html += '<p>Want more confidence — including per-type discriminator items and a fuller mislabeling screen? <a href="#" id="go-full">Take the exhaustive test →</a></p>';
+    if (bankName === "short" || bankName === "shortmc") {
+      html += '<p>Want more confidence — including per-type discriminator items and a fuller mislabeling screen? <a href="#" id="go-full">Take the exhaustive version →</a></p>';
     }
     html += '<p><button class="btn ghost" id="btn-retake" type="button">Retake</button></p>';
 
@@ -219,7 +247,10 @@
     $("#results").scrollIntoView({ behavior: "smooth", block: "start" });
 
     const goFull = $("#go-full");
-    if (goFull) goFull.addEventListener("click", function (e) { e.preventDefault(); startQuiz("full"); });
+    if (goFull) goFull.addEventListener("click", function (e) {
+      e.preventDefault();
+      startQuiz(bankName === "shortmc" ? "fullmc" : "full");
+    });
     $("#btn-retake").addEventListener("click", function () {
       $("#results").hidden = true;
       $("#chooser").hidden = false;
@@ -230,6 +261,8 @@
   document.addEventListener("DOMContentLoaded", function () {
     $("#start-short").addEventListener("click", function () { startQuiz("short"); });
     $("#start-full").addEventListener("click", function () { startQuiz("full"); });
+    $("#start-short-mc").addEventListener("click", function () { startQuiz("shortmc"); });
+    $("#start-full-mc").addEventListener("click", function () { startQuiz("fullmc"); });
     $("#btn-back").addEventListener("click", function () {
       if (idx > 0) { idx -= 1; renderQuestion(); }
     });

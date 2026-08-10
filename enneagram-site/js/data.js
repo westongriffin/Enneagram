@@ -278,6 +278,12 @@ const CONFOUNDS = {
     mimics: [9, 5, 4],
     explain:
       "Wanting connection but avoiding it out of fear of embarrassment can mimic 9 (conflict avoidance), 5 (withdrawal), or 4 (feeling like an outsider). Those types withdraw for different reasons — peace, energy, identity — while social anxiety withdraws from fear of judgment specifically. If this fits, withdrawn-type scores may be inflated."
+  },
+  hypomania: {
+    label: "Hypomania-like episodes",
+    mimics: [7, 3],
+    explain:
+      "Episodic stretches of elevated energy with a reduced need for sleep and racing thoughts can mimic Type 7 enthusiasm or Type 3 drive. Type energy is a stable, lifelong setting; hypomanic energy arrives in episodes that feel different from your usual self. If this fits, your 7/3 score may reflect mood episodes rather than core type — and episodic mood changes are worth discussing with a clinician in their own right."
   }
 };
 
