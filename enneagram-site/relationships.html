@@ -77,7 +77,7 @@
     <p>Base scores for every combination — wings not applied. Tap any cell to load that pairing above.</p>
     <div class="table-scroll">
       <table class="heatmap" id="heatmap">
-        <caption>Compatibility base score by type pair (55–95 scale)</caption>
+        <caption>Compatibility base score by type pair — by design the scores span 62 (most default friction) to 85 (most naturally complementary)</caption>
       </table>
     </div>
 
@@ -182,12 +182,15 @@
           : "wings " + (wingDelta > 0 ? "+" : "−") + Math.abs(wingDelta));
         if (instinct) parts.push("instincts " + (instinct.delta >= 0 ? "+" : "−") + Math.abs(instinct.delta));
         const deltaText = parts.join(" · ");
-        const meterPct = Math.max(0, Math.min(100, (adj - 50) * 2));
+        // Scores are authored on a deliberate 60–90 band; the meter spans that
+        // band so differences between pairings stay visible.
+        const meterPct = Math.max(0, Math.min(100, (adj - 60) / 30 * 100));
 
         let h = "";
-        h += '<div class="pair-score"><span class="pair-num">' + adj + '</span><span class="pair-outof">/ 100</span>' +
+        h += '<div class="pair-score"><span class="pair-num">' + adj + '</span><span class="pair-outof">compatibility</span>' +
              '<div class="pair-meter"><span style="width:' + meterPct + '%"></span></div>' +
-             '<p class="quiz-meta">Base pairing ' + base + " · " + deltaText + "</p></div>";
+             '<p class="quiz-meta">Base pairing ' + base + " · " + deltaText +
+             " · scores run ~62–85 by design: no pairing is doomed, none is effortless</p></div>";
         h += "<h3 style='margin-top:1rem'>" + p.t + "</h3>";
         h += "<p>" + p.blurb + "</p>";
         const bl = badges(a, b);
@@ -220,7 +223,7 @@
           h += "</tr>";
         }
         h += "</tbody>";
-        $("#heatmap").innerHTML = "<caption>Compatibility base score by type pair (55–95 scale)</caption>" + h;
+        $("#heatmap").innerHTML = "<caption>Compatibility base score by type pair — by design the scores span 62 (most default friction) to 85 (most naturally complementary)</caption>" + h;
         $("#heatmap").addEventListener("click", function (e) {
           const btn = e.target.closest("button[data-a]");
           if (!btn) return;
