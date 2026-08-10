@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Enneagram Tests — enneaguide</title>
+  <meta name="description" content="Two enneagram tests — a 24-item quick test and a 75-item exhaustive test — that screen for common mislabelings like ADHD, anxiety, depression, autism, and trauma.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site">
+    <div class="bar">
+      <a class="brand" href="index.html">ennea<span>guide</span></a>
+      <nav class="main" aria-label="Main">
+        <a href="index.html">Overview</a>
+        <a href="types.html">The 9 Types</a>
+        <a href="mislabelings.html">Mislabelings</a>
+        <a href="tests.html" aria-current="page">Take a Test</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section id="chooser">
+      <h1>Take a Test</h1>
+      <p>
+        Both tests ask you to rate statements from <em>strongly disagree</em> to <em>strongly
+        agree</em>. Answer for <strong>how you've been across your whole adult life</strong>, not just
+        lately — and answer for who you are, not who you'd like to be. Alongside the type items, both
+        tests include <strong>screening items</strong> for patterns that famously imitate enneagram
+        types (ADHD, anxiety, depression, autism, trauma, OCD/OCPD, social anxiety). If your answers
+        fit one of those look-alike patterns <em>and</em> it overlaps your top types, your result
+        will carry a ⚑ flag explaining the possible mislabeling.
+      </p>
+
+      <div class="grid cols-2">
+        <div class="card" id="short">
+          <p class="kicker">≈ 5 minutes · 24 items</p>
+          <h2 style="margin:0.25rem 0">Quick test</h2>
+          <p>Two motivation-first items per type plus six mislabeling screeners. Gives a first
+          hypothesis with a coarse look-alike check.</p>
+          <p><button class="btn" id="start-short" type="button">Start the quick test</button></p>
+        </div>
+        <div class="card" id="full">
+          <p class="kicker">≈ 20 minutes · 75 items</p>
+          <h2 style="margin:0.25rem 0">Exhaustive test</h2>
+          <p>Six discriminating items per type — including items that separate look-alike pairs —
+          plus a full 21-item screen across seven look-alike patterns, with onset and
+          context questions that behavior-only tests skip.</p>
+          <p><button class="btn" id="start-full" type="button">Start the exhaustive test</button></p>
+        </div>
+      </div>
+
+      <div class="callout caution">
+        <p><strong>Before you start:</strong> this is a self-reflection tool. It cannot diagnose any
+        condition, and its mislabeling flags are hypotheses, not findings. If you're currently in a
+        depressive episode, an anxiety spike, or fresh trauma, your answers will reflect the state
+        more than the trait — the honest move is to retake it when the storm has passed, and to bring
+        the state itself to a professional.</p>
+      </div>
+    </section>
+
+    <section id="quiz" hidden>
+      <p class="quiz-meta" id="q-count"></p>
+      <div class="quiz-progress"><div id="progress-fill" style="width:0%"></div></div>
+      <p class="q-text" id="q-text"></p>
+      <div class="likert" id="likert" role="group" aria-label="Answer options"></div>
+      <div class="quiz-nav">
+        <button class="btn ghost" id="btn-back" type="button">← Back</button>
+        <span class="quiz-meta">Selecting an answer advances automatically.</span>
+      </div>
+    </section>
+
+    <section id="results" hidden>
+      <div class="card" id="results-body"></div>
+    </section>
+  </main>
+
+  <footer class="site">
+    <p>enneaguide — results are hypotheses for self-observation, not measurements, diagnoses, or
+    professional advice. Scores compare your agreement across type patterns; the screening flags
+    compare it against known look-alike patterns.</p>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/questions.js"></script>
+  <script src="js/quiz.js"></script>
+</body>
+</html>
