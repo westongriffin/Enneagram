@@ -346,6 +346,76 @@ details summary:hover { color: var(--accent); }
 .result-flag h4 { margin: 0 0 0.35rem; }
 .result-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1.5rem; }
 
+/* ---------- Pairing & comparison pickers ---------- */
+.pair-picker {
+  display: flex; gap: 1rem; align-items: stretch; flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+.pair-picker fieldset {
+  flex: 1 1 14rem; border: 1px solid var(--hairline); border-radius: var(--radius);
+  padding: 0.75rem 1rem 1rem; margin: 0; min-width: 0;
+}
+.pair-picker legend { font-weight: 700; padding: 0 0.4rem; font-size: 0.95rem; }
+.pair-picker label { display: block; font-size: 0.85rem; color: var(--ink-2); margin-top: 0.5rem; }
+.pair-picker select {
+  display: block; width: 100%; margin-top: 0.25rem;
+  font: inherit; font-size: 0.95rem; color: var(--ink);
+  background: var(--page); border: 1px solid var(--border);
+  border-radius: 8px; padding: 0.5rem 0.6rem;
+}
+.pair-heart {
+  align-self: center; font-size: 1.6rem; color: var(--accent);
+  flex: none; padding: 0 0.25rem;
+}
+@media (max-width: 620px) { .pair-heart { display: none; } }
+
+.pair-score { margin-top: 0.5rem; }
+.pair-num { font-size: 3rem; font-weight: 800; letter-spacing: -0.03em; }
+.pair-outof { color: var(--muted); font-weight: 600; margin-left: 0.25rem; }
+.pair-meter {
+  height: 10px; background: var(--hairline); border-radius: 999px;
+  overflow: hidden; margin: 0.4rem 0 0.25rem; max-width: 26rem;
+}
+.pair-meter span {
+  display: block; height: 100%;
+  background: linear-gradient(90deg, var(--accent-deep), var(--accent));
+  border-radius: 999px; transition: width 0.3s ease;
+}
+
+/* ---------- Pairing heatmap ---------- */
+table.heatmap { border-collapse: separate; border-spacing: 2px; min-width: 30rem; }
+table.heatmap th { border: none; font-size: 0.85rem; text-align: center; padding: 0.3rem; }
+table.heatmap td { border: none; padding: 0; }
+table.heatmap td button {
+  display: block; width: 100%; min-width: 2.6rem; padding: 0.55rem 0.2rem;
+  border: none; border-radius: 6px; cursor: pointer;
+  font: inherit; font-size: 0.85rem; font-weight: 600;
+  font-variant-numeric: tabular-nums; text-align: center;
+}
+@media (hover: hover) {
+  table.heatmap td button:hover { outline: 2px solid var(--ink); outline-offset: -2px; }
+}
+
+/* ---------- Side-by-side comparison ---------- */
+.compare-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+  gap: 1rem; margin-top: 0.5rem;
+}
+.compare-col {
+  border: 1px solid var(--hairline); border-radius: var(--radius);
+  padding: 0.9rem 1.1rem;
+}
+.compare-col p { margin: 0.4rem 0; font-size: 0.95rem; }
+.compare-col b { color: var(--ink); }
+.compare-col .type-num { width: 1.8rem; height: 1.8rem; font-size: 0.95rem; }
+
+details.lookalikes { padding: 0.9rem 1.4rem; }
+details.lookalikes summary { display: flex; align-items: center; gap: 0.6rem; }
+details.lookalikes .type-num { width: 1.8rem; height: 1.8rem; font-size: 0.95rem; }
+details.lookalikes table { margin: 0.75rem 0 0.25rem; }
+details.lookalikes th { white-space: nowrap; }
+details.lookalikes em { color: var(--ink); font-style: normal; font-weight: 600; }
+
 /* ---------- PDF report (print) ---------- */
 #print-area { display: none; }
 @media print {
