@@ -23,6 +23,7 @@
   let bankName = "";
   let answers = [];
   let idx = 0;
+  let advancing = false;
 
   const $ = (sel) => document.querySelector(sel);
 
@@ -61,13 +62,21 @@
       b.textContent = label;
       if (answers[idx] === i + 1) b.classList.add("sel");
       b.addEventListener("click", function () {
+        if (advancing) return;
+        advancing = true;
         answers[idx] = i + 1;
-        if (idx < bank.length - 1) {
-          idx += 1;
-          renderQuestion();
-        } else {
-          showResults();
-        }
+        // Show the selection briefly so the tap feels registered before advancing.
+        wrap.querySelectorAll("button").forEach(function (x) { x.classList.remove("sel"); });
+        b.classList.add("sel");
+        setTimeout(function () {
+          advancing = false;
+          if (idx < bank.length - 1) {
+            idx += 1;
+            renderQuestion();
+          } else {
+            showResults();
+          }
+        }, 160);
       });
       wrap.appendChild(b);
     });

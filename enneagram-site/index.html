@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>The Enneagram — Types, Wings &amp; Honest Typing</title>
   <meta name="description" content="A guide to the nine enneagram types, wings, and growth arrows — with an honest look at common mislabelings (ADHD, anxiety, depression and more) and two tests that screen for them.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='44' fill='none' stroke='%232a78d6' stroke-width='7'/%3E%3Cpath d='M50 14 L81 68 L19 68 Z' fill='none' stroke='%231baf7a' stroke-width='7' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <meta name="theme-color" content="#f9f9f7" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0d0d0d" media="(prefers-color-scheme: dark)">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -21,56 +24,67 @@
   </header>
 
   <main>
-    <h1>The Enneagram, without the wishful thinking</h1>
-    <p>
-      The enneagram is a model of nine personality patterns, each organized around a
-      <strong>core fear</strong> and <strong>core desire</strong>. It describes <em>why</em> you do
-      what you do — the motivation under the behavior — which is also exactly why people mistype:
-      two people can act identically for completely different reasons, and a psychological
-      condition can imitate a type's behavior without sharing its motivation.
-    </p>
-    <p>
-      This site covers all nine types with their wings and growth/stress arrows, catalogs the most
-      common <a href="mislabelings.html">mislabelings</a> (like ADHD wearing a Type 7 costume), and
-      offers <a href="tests.html">two tests</a> — a quick one and an exhaustive one — that screen
-      for those look-alikes instead of ignoring them.
-    </p>
+    <section class="hero">
+      <h1>The Enneagram, without the wishful thinking</h1>
+      <p class="lede">
+        The enneagram is a model of nine personality patterns, each organized around a
+        <strong>core fear</strong> and <strong>core desire</strong>. It describes <em>why</em> you do
+        what you do — the motivation under the behavior — which is also exactly why people mistype:
+        two people can act identically for completely different reasons, and a psychological
+        condition can imitate a type's behavior without sharing its motivation.
+      </p>
+      <p class="lede">
+        This site covers all nine types with their wings and growth/stress arrows, catalogs the most
+        common <a href="mislabelings.html">mislabelings</a> (like ADHD wearing a Type 7 costume), and
+        offers <a href="tests.html">two tests</a> — a quick one and an exhaustive one — that screen
+        for those look-alikes instead of ignoring them.
+      </p>
+      <div class="cta-row">
+        <a class="btn" href="tests.html">Find your type</a>
+        <a class="btn ghost" href="types.html">Browse the 9 types</a>
+      </div>
+    </section>
 
     <div class="symbol-wrap" aria-hidden="true">
       <svg width="360" height="360" viewBox="0 0 360 360" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="180" cy="180" r="140"/>
         <!-- hexad 1-4-2-8-5-7-1 -->
-        <path d="M270 72.8 L227.9 311.6 L317.9 155.7 L90 72.8 L132.1 311.6 L42.1 155.7 Z"/>
+        <path class="hex" d="M270 72.8 L227.9 311.6 L317.9 155.7 L90 72.8 L132.1 311.6 L42.1 155.7 Z"/>
         <!-- triangle 3-6-9 -->
         <path class="tri" d="M301.2 250 L58.8 250 L180 40 Z"/>
         <g class="num" text-anchor="middle" stroke="none">
-          <text x="180" y="26">9</text>
-          <text x="288" y="62">1</text>
-          <text x="343" y="158">2</text>
-          <text x="324" y="268">3</text>
-          <text x="237" y="340">4</text>
-          <text x="124" y="340">5</text>
-          <text x="36" y="268">6</text>
-          <text x="17" y="158">7</text>
-          <text x="72" y="62">8</text>
+          <text class="n-body" x="180" y="26">9</text>
+          <text class="n-body" x="288" y="62">1</text>
+          <text class="n-heart" x="343" y="158">2</text>
+          <text class="n-heart" x="324" y="268">3</text>
+          <text class="n-heart" x="237" y="340">4</text>
+          <text class="n-head" x="124" y="340">5</text>
+          <text class="n-head" x="36" y="268">6</text>
+          <text class="n-head" x="17" y="158">7</text>
+          <text class="n-body" x="72" y="62">8</text>
         </g>
       </svg>
     </div>
+    <p class="symbol-legend" aria-hidden="true">
+      <span class="l-body">Body · 8 9 1</span>
+      <span class="l-heart">Heart · 2 3 4</span>
+      <span class="l-head">Head · 5 6 7</span>
+    </p>
 
     <h2>The three centers of intelligence</h2>
     <div class="grid cols-3">
-      <div class="card">
-        <p class="kicker">Body / Gut · 8, 9, 1</p>
+      <div class="card center-body">
+        <p class="kicker center-body">Body / Gut · 8, 9, 1</p>
         <p>Instinct-led types whose core emotional issue is <strong>anger</strong>: Eights express it,
         Nines forget it, Ones repress and moralize it. Their concern is autonomy and control.</p>
       </div>
-      <div class="card">
-        <p class="kicker">Heart / Feeling · 2, 3, 4</p>
+      <div class="card center-heart">
+        <p class="kicker center-heart">Heart / Feeling · 2, 3, 4</p>
         <p>Image-aware types whose core emotional issue is <strong>shame</strong>: Twos earn worth
         through giving, Threes through achieving, Fours through being unique. Their concern is identity and value.</p>
       </div>
-      <div class="card">
-        <p class="kicker">Head / Thinking · 5, 6, 7</p>
+      <div class="card center-head">
+        <p class="kicker center-head">Head / Thinking · 5, 6, 7</p>
         <p>Strategy-led types whose core emotional issue is <strong>fear</strong>: Fives retreat from it,
         Sixes scan for it, Sevens outrun it. Their concern is security and guidance.</p>
       </div>
@@ -109,13 +123,13 @@
     </div>
 
     <div class="grid cols-2">
-      <div class="card">
+      <div class="card hoverable">
         <h3 style="margin-top:0">Quick test</h3>
         <p>24 items, about 5 minutes. Two motivation-first items per type plus six mislabeling
         screeners. Good for a first hypothesis.</p>
         <p><a class="btn" href="tests.html#short">Take the quick test</a></p>
       </div>
-      <div class="card">
+      <div class="card hoverable">
         <h3 style="margin-top:0">Exhaustive test</h3>
         <p>75 items, about 20 minutes. Six discriminating items per type plus a full look-alike
         screen: ADHD, anxiety, depression, autism, trauma, OCD/OCPD, social anxiety.</p>
