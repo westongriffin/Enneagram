@@ -19,10 +19,12 @@
   <meta name="theme-color" content="#f9f9f7" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0d0d0d" media="(prefers-color-scheme: dark)">
   <script>
-    /* Set theme before first paint: light by default, dark only if chosen. */
+    /* Resolve theme before first paint: light default, dark or auto if chosen. */
     (function () {
       var t; try { t = localStorage.getItem("theme"); } catch (e) {}
-      document.documentElement.dataset.theme = t === "dark" ? "dark" : "light";
+      var dark = t === "dark" || (t === "auto" && window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches);
+      document.documentElement.dataset.theme = dark ? "dark" : "light";
     })();
   </script>
   <link rel="stylesheet" href="css/style.css">
@@ -86,6 +88,20 @@
             <button class="btn" id="start-full" type="button">Rate statements</button>
             <button class="btn" id="start-full-mc" type="button">Multiple choice</button>
           </div>
+        </div>
+      </div>
+
+      <div class="callout" id="invite-banner" hidden style="border-left-color: var(--c-heart)">
+        <p class="kicker">♥ Pairing invite</p>
+        <p id="invite-text"></p>
+      </div>
+
+      <div class="card" id="resume-card" hidden>
+        <h2 style="margin-top:0" class="no-rule">Continue where you left off</h2>
+        <p class="quiz-meta" id="resume-text"></p>
+        <div class="format-row">
+          <button class="btn" id="resume-continue" type="button">Continue</button>
+          <button class="btn ghost" id="resume-discard" type="button">Discard</button>
         </div>
       </div>
 
@@ -154,7 +170,7 @@
   <footer class="site">
     <p>Official Enneagram — results are hypotheses for self-observation, not measurements, diagnoses, or
     professional advice. Scores compare your agreement across type patterns; the screening flags
-    compare it against known look-alike patterns.</p>
+    compare it against known look-alike patterns. <a href="about.html">About &amp; FAQ</a> · <a href="search.html">Search</a></p>
   </footer>
 
   <!-- Filled with a print-formatted report when downloading results as PDF. -->
@@ -165,5 +181,6 @@
   <script src="js/questions.js"></script>
   <script src="js/quiz.js"></script>
   <script src="js/theme.js"></script>
+  <script src="js/profile.js"></script>
 </body>
 </html>

@@ -19,10 +19,12 @@
   <meta name="theme-color" content="#f9f9f7" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0d0d0d" media="(prefers-color-scheme: dark)">
   <script>
-    /* Set theme before first paint: light by default, dark only if chosen. */
+    /* Resolve theme before first paint: light default, dark or auto if chosen. */
     (function () {
       var t; try { t = localStorage.getItem("theme"); } catch (e) {}
-      document.documentElement.dataset.theme = t === "dark" ? "dark" : "light";
+      var dark = t === "dark" || (t === "auto" && window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches);
+      document.documentElement.dataset.theme = dark ? "dark" : "light";
     })();
   </script>
   <link rel="stylesheet" href="css/style.css">
@@ -92,6 +94,7 @@
         </fieldset>
       </div>
       <div id="pair-result"></div>
+      <p><button class="btn ghost" id="btn-pair-pdf" type="button">Download couple's PDF</button></p>
     </div>
 
     <h2>The full pairing map</h2>
@@ -131,8 +134,11 @@
   </main>
 
   <footer class="site">
-    <p>Official Enneagram — an educational resource, not relationship advice or a substitute for it.</p>
+    <p>Official Enneagram — an educational resource, not relationship advice or a substitute for it. <a href="about.html">About &amp; FAQ</a> · <a href="search.html">Search</a></p>
   </footer>
+
+  <!-- Filled with a print-formatted pairing report for Save as PDF. -->
+  <div id="print-area" aria-hidden="true"></div>
 
   <script src="js/data.js"></script>
   <script src="js/pairs.js"></script>
@@ -312,17 +318,63 @@
       });
       buildHeatmap();
 
-      // Allow deep-linking: relationships.html?a=4&b=8
+      // Deep-linking: relationships.html?a=4&aw=3&ai=sx&b=8&bw=9&bi=sp
       const q = new URLSearchParams(location.search);
       if (q.get("a") && q.get("b")) {
         const qa = Math.min(9, Math.max(1, Number(q.get("a")) || 1));
         const qb = Math.min(9, Math.max(1, Number(q.get("b")) || 9));
         $("#a-type").value = qa; $("#b-type").value = qb;
         fillWingSelect($("#a-wing"), qa); fillWingSelect($("#b-wing"), qb);
+        const aw = q.get("aw"), bw = q.get("bw");
+        if (aw && WING_NEIGHBORS[qa].indexOf(Number(aw)) !== -1) $("#a-wing").value = aw;
+        if (bw && WING_NEIGHBORS[qb].indexOf(Number(bw)) !== -1) $("#b-wing").value = bw;
+        const ai = q.get("ai"), bi = q.get("bi");
+        if (/^(sp|so|sx)$/.test(ai || "")) $("#a-inst").value = ai;
+        if (/^(sp|so|sx)$/.test(bi || "")) $("#b-inst").value = bi;
       }
       render();
+
+      // Couple's PDF: print-formatted pairing report via Save as PDF
+      $("#btn-pair-pdf").addEventListener("click", function () {
+        const a = Number($("#a-type").value), b = Number($("#b-type").value);
+        const wa = $("#a-wing").value, wb = $("#b-wing").value;
+        const ia = $("#a-inst").value, ib = $("#b-inst").value;
+        const p = PAIRS[pairKey(a, b)];
+        const wingScore = Math.round(wingAdjusted(a, wa, b, wb));
+        const instinct = (ia && ib) ? INSTINCT_PAIRS[instinctPairKey(ia, ib)] : null;
+        const adj = wingScore + (instinct ? instinct.delta : 0);
+        const band = bandFor(adj);
+        const lbl = function (t, w, i) {
+          return "Type " + t + " — " + ENNEAGRAM_TYPES[t].name +
+            (w !== "balanced" ? " (" + t + "w" + w + ")" : "") + (i ? " · " + i : "");
+        };
+        let h = '<p class="p-brand">Official Enneagram · pairing report</p>';
+        h += "<h1>" + lbl(a, wa, ia) + " ♥ " + lbl(b, wb, ib) + "</h1>";
+        h += "<p><strong>" + adj + " · " + band.label + "</strong> — " + band.note + "</p>";
+        h += "<h2>" + p.t + "</h2><p>" + p.blurb + "</p>";
+        h += "<p><strong>The spark:</strong> " + p.spark + "</p>";
+        h += "<p><strong>The friction:</strong> " + p.friction + "</p>";
+        h += "<p><strong>How it grows:</strong> " + p.growth + "</p>";
+        if (instinct) h += "<p><strong>Instincts (" + ia + " + " + ib + "):</strong> " + instinct.note + "</p>";
+        h += '<p class="p-foot">Compatibility scores describe default dynamics at average health — not destiny. ' +
+             "Health level and effort beat type math every time. officialenneagram.com</p>";
+        document.getElementById("print-area").innerHTML = h;
+        document.body.classList.add("print-result");
+        const prev = document.title;
+        document.title = "pairing-" + a + "-and-" + b;
+        let done = false;
+        const cleanup = function () {
+          if (done) return; done = true;
+          document.body.classList.remove("print-result");
+          document.title = prev;
+        };
+        window.addEventListener("afterprint", cleanup, { once: true });
+        window.print();
+        setTimeout(cleanup, 3000);
+      });
     })();
   </script>
   <script src="js/theme.js"></script>
+  <script src="js/profile.js"></script>
 </body>
 </html>

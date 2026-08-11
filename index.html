@@ -19,10 +19,12 @@
   <meta name="theme-color" content="#f9f9f7" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0d0d0d" media="(prefers-color-scheme: dark)">
   <script>
-    /* Set theme before first paint: light by default, dark only if chosen. */
+    /* Resolve theme before first paint: light default, dark or auto if chosen. */
     (function () {
       var t; try { t = localStorage.getItem("theme"); } catch (e) {}
-      document.documentElement.dataset.theme = t === "dark" ? "dark" : "light";
+      var dark = t === "dark" || (t === "auto" && window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches);
+      document.documentElement.dataset.theme = dark ? "dark" : "light";
     })();
   </script>
   <link rel="stylesheet" href="css/style.css">
@@ -203,12 +205,13 @@
 
   <footer class="site">
     <p>Official Enneagram — an educational resource. Not affiliated with any certifying body; not a source of
-    medical or psychological advice.</p>
+    medical or psychological advice. <a href="about.html">About &amp; FAQ</a> · <a href="search.html">Search</a></p>
   </footer>
 
   <script>
     /* No behavior needed on this page; theme handled in CSS. */
   </script>
   <script src="js/theme.js"></script>
+  <script src="js/profile.js"></script>
 </body>
 </html>

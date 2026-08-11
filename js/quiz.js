@@ -44,15 +44,60 @@
     return a;
   }
 
-  function startQuiz(which) {
-    bankName = which;
-    // Shuffle question order; for multiple-choice items also shuffle the
-    // options (on a copy) so option position carries no signal.
-    bank = shuffle(BANKS[which].items()).map(function (q) {
-      return q.options ? Object.assign({}, q, { options: shuffle(q.options) }) : q;
+  const PROGRESS_KEY = "oe_progress";
+
+  function saveProgress() {
+    try {
+      localStorage.setItem(PROGRESS_KEY, JSON.stringify({
+        bank: bankName, order: bankOrder, optOrders: optOrders,
+        answers: answers, idx: idx, ts: Date.now()
+      }));
+    } catch (e) { /* storage unavailable */ }
+  }
+  function clearProgress() {
+    try { localStorage.removeItem(PROGRESS_KEY); } catch (e) { /* ignore */ }
+    renderResume();
+  }
+  function loadProgress() {
+    try {
+      const s = JSON.parse(localStorage.getItem(PROGRESS_KEY) || "null");
+      if (!s || !BANKS[s.bank] || !Array.isArray(s.order)) return null;
+      if (Date.now() - (s.ts || 0) > 7 * 24 * 3600 * 1000) return null;
+      const items = BANKS[s.bank].items();
+      if (s.order.length !== items.length) return null; // bank changed since save
+      return s;
+    } catch (e) { return null; }
+  }
+
+  let bankOrder = [], optOrders = {};
+
+  function buildBank(which, order, savedOptOrders) {
+    const items = BANKS[which].items();
+    bankOrder = order || shuffle(items.map(function (_, i) { return i; }));
+    optOrders = {};
+    return bankOrder.map(function (origIdx, pos) {
+      const q = items[origIdx];
+      if (!q.options) return q;
+      let perm = savedOptOrders && savedOptOrders[pos];
+      if (!perm || perm.length !== q.options.length) {
+        perm = shuffle(q.options.map(function (_, i) { return i; }));
+      }
+      optOrders[pos] = perm;
+      return Object.assign({}, q, { options: perm.map(function (i) { return q.options[i]; }) });
     });
-    answers = new Array(bank.length).fill(null);
-    idx = 0;
+  }
+
+  function startQuiz(which, resume) {
+    bankName = which;
+    bank = buildBank(which, resume && resume.order, resume && resume.optOrders);
+    answers = resume ? resume.answers.slice() : new Array(bank.length).fill(null);
+    if (resume) {
+      // land on the first unanswered question, not the last answered one
+      const firstGap = answers.indexOf(null);
+      idx = firstGap !== -1 ? firstGap : Math.min(resume.idx, bank.length - 1);
+    } else {
+      idx = 0;
+    }
     $("#chooser").hidden = true;
     $("#results").hidden = true;
     $("#quiz").hidden = false;
@@ -87,11 +132,14 @@
         b.classList.add("sel");
         setTimeout(function () {
           advancing = false;
-          if (idx < bank.length - 1) {
-            idx += 1;
-            renderQuestion();
+          if (answers.every(function (x) { return x !== null; })) {
+            saveProgress();
+            showReview();
           } else {
-            showResults();
+            // advance to the next question, or wrap to the first unanswered
+            idx = idx < bank.length - 1 ? idx + 1 : answers.indexOf(null);
+            saveProgress();
+            renderQuestion();
           }
         }, 160);
       });
@@ -371,6 +419,39 @@
     return location.origin + location.pathname + "?r=" + encodeResult(lastResult);
   }
 
+  /* ---- Partner invites ---- */
+
+  function getInvite() {
+    try {
+      const s = JSON.parse(localStorage.getItem("oe_invite") || "null");
+      if (!s || !(s.t >= 1 && s.t <= 9)) return null;
+      return s;
+    } catch (e) { return null; }
+  }
+
+  function invitePartner() {
+    const top = lastResult.types[0];
+    const wing = wingFor(top.type, lastResult.types);
+    const w = /w(\d)/.test(wing.label) ? RegExp.$1 : "x";
+    let i = "x";
+    if (lastResult.instincts) {
+      i = Object.keys(lastResult.instincts).sort(function (a, b) { return lastResult.instincts[b] - lastResult.instincts[a]; })[0];
+    }
+    const url = location.origin + location.pathname + "?invite=" + top.type + "-" + w + "-" + i;
+    const text = "I'm a Type " + top.type + " — " + ENNEAGRAM_TYPES[top.type].name +
+      ". Take this enneagram test and we'll see how we pair:";
+    const status = $("#share-status");
+    if (navigator.share) {
+      navigator.share({ title: "Compare our enneagram types", text: text, url: url }).catch(function () {});
+    } else if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text + " " + url).then(function () {
+        status.textContent = "Invite link copied — when they finish, they'll see your pairing.";
+      }, function () { window.prompt("Send this link:", url); });
+    } else {
+      window.prompt("Send this link:", url);
+    }
+  }
+
   function shareResult() {
     const top = lastResult.types[0];
     const t = ENNEAGRAM_TYPES[top.type];
@@ -466,6 +547,30 @@
     setTimeout(cleanup, 3000);
   }
 
+  /* Review screen: shown once every question has an answer. */
+  function showReview() {
+    $("#q-count").textContent = "All " + bank.length + " questions answered";
+    $("#q-hint").textContent = "Tap any number to revisit that question, or finish:";
+    $("#q-text").textContent = "Ready for your results?";
+    $("#progress-fill").style.width = "100%";
+    const wrap = $("#likert");
+    wrap.classList.add("mc");
+    wrap.innerHTML = '<div class="review-grid">' + bank.map(function (_, i) {
+      return '<button type="button" class="review-chip" data-q="' + i + '">' + (i + 1) + "</button>";
+    }).join("") + "</div>" +
+    '<button type="button" class="btn" id="btn-finish" style="margin-top:0.75rem">See my results</button>';
+    wrap.querySelector(".review-grid").addEventListener("click", function (e) {
+      const b = e.target.closest("button[data-q]");
+      if (!b) return;
+      idx = Number(b.dataset.q);
+      renderQuestion();
+    });
+    $("#btn-finish").addEventListener("click", function () {
+      clearProgress();
+      showResults();
+    });
+  }
+
   function showResults() {
     $("#progress-fill").style.width = "100%";
     const result = computeScores();
@@ -502,7 +607,7 @@
             '<span class="pill">Runner-up: Type ' + second.type + " — " + esc(ENNEAGRAM_TYPES[second.type].name) + "</span></p>";
     html += "<p>" + esc(t.summary) + "</p>";
     if (wing.text) html += "<p><strong>Wing:</strong> " + esc(wing.text) + "</p>";
-    html += '<p><a href="types.html#type-' + top.type + '">Read the full Type ' + top.type + " profile →</a> · " +
+    html += '<p><a href="type-' + top.type + '.html">Read the full Type ' + top.type + " profile →</a> · " +
             '<a href="growth.html#type-' + top.type + '">Growth path for Type ' + top.type + " →</a></p>";
 
     if (top.pct - second.pct <= 4) {
@@ -602,8 +707,8 @@
         } else {
           html += "<p><strong>Your top type changed.</strong> Without the contested items, Type " + adjTop.type + " — " +
             esc(ENNEAGRAM_TYPES[adjTop.type].name) + " leads instead. That's the flag's warning made concrete: read both " +
-            '<a href="types.html#type-' + top.type + '">Type ' + top.type + "</a> and " +
-            '<a href="types.html#type-' + adjTop.type + '">Type ' + adjTop.type + "</a> profiles, and " +
+            '<a href="type-' + top.type + '.html">Type ' + top.type + "</a> and " +
+            '<a href="type-' + adjTop.type + '.html">Type ' + adjTop.type + "</a> profiles, and " +
             '<a href="similarities.html?a=' + top.type + "&b=" + adjTop.type + '">how they differ</a>, before settling.</p>';
         }
         html += '<p class="quiz-meta">This exclusion removes item-level overlap only — no self-report test can remove ' +
@@ -620,9 +725,27 @@
     html += '<div class="result-actions">' +
       '<button class="btn" id="btn-pdf" type="button">Download PDF</button>' +
       '<button class="btn" id="btn-share" type="button">Share result</button>' +
+      (!opts.shared ? '<button class="btn" id="btn-invite" type="button">♥ Invite your partner</button>' : "") +
       '<button class="btn ghost" id="btn-retake" type="button">' +
         (opts.shared ? "Take the test yourself" : opts.history ? "Back to tests" : "Retake") + "</button>" +
       '</div><p class="quiz-meta" id="share-status" role="status"></p>';
+
+    // Partner-invite loop: if this person arrived via an invite, close it.
+    const inv = getInvite();
+    if (inv && !opts.shared) {
+      const myWing = wingFor(top.type, result.types);
+      const myWingNum = /w(\d)/.test(myWing.label) ? RegExp.$1 : "";
+      let myInst = "";
+      if (result.instincts) {
+        myInst = Object.keys(result.instincts).sort(function (a, b) { return result.instincts[b] - result.instincts[a]; })[0];
+      }
+      const pairUrl = "relationships.html?a=" + inv.t + (inv.w ? "&aw=" + inv.w : "") + (inv.i ? "&ai=" + inv.i : "") +
+        "&b=" + top.type + (myWingNum ? "&bw=" + myWingNum : "") + (myInst ? "&bi=" + myInst : "");
+      html += '<div class="callout" style="border-left-color: var(--c-heart)"><p class="kicker">Your pairing is ready</p>' +
+        "<p>The person who invited you is a <strong>Type " + inv.t + (inv.w ? "w" + inv.w : "") +
+        "</strong>. You came out <strong>Type " + top.type + (myWingNum ? "w" + myWingNum : "") + "</strong>.</p>" +
+        '<p><a class="btn" href="' + pairUrl + '">♥ See your pairing report →</a></p></div>';
+    }
     if (!opts.shared && !opts.history) {
       html += '<p class="quiz-meta">Saved to your result history on this device — nothing leaves your browser.</p>';
     }
@@ -639,6 +762,8 @@
     });
     $("#btn-pdf").addEventListener("click", downloadPdf);
     $("#btn-share").addEventListener("click", shareResult);
+    const invBtn = $("#btn-invite");
+    if (invBtn) invBtn.addEventListener("click", invitePartner);
     $("#btn-retake").addEventListener("click", function () {
       if (opts.shared) history.replaceState(null, "", location.pathname);
       $("#results").hidden = true;
@@ -647,14 +772,63 @@
     });
   }
 
+  /* Resume-in-progress card on the chooser */
+  function renderResume() {
+    const card = $("#resume-card");
+    if (!card) return;
+    const s = loadProgress();
+    if (!s) { card.hidden = true; return; }
+    const done = s.answers.filter(function (a) { return a !== null; }).length;
+    card.hidden = false;
+    $("#resume-text").textContent = BANKS[s.bank].label + " — " + done + " of " + s.answers.length + " answered.";
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     $("#start-short").addEventListener("click", function () { startQuiz("short"); });
     $("#start-full").addEventListener("click", function () { startQuiz("full"); });
     $("#start-short-mc").addEventListener("click", function () { startQuiz("shortmc"); });
     $("#start-full-mc").addEventListener("click", function () { startQuiz("fullmc"); });
     $("#btn-back").addEventListener("click", function () {
-      if (idx > 0) { idx -= 1; renderQuestion(); }
+      if (idx > 0) { idx -= 1; saveProgress(); renderQuestion(); }
     });
+
+    // Resume where you left off
+    renderResume();
+    const rBtn = $("#resume-continue"), rDrop = $("#resume-discard");
+    if (rBtn) rBtn.addEventListener("click", function () {
+      const s = loadProgress();
+      if (s) startQuiz(s.bank, s);
+    });
+    if (rDrop) rDrop.addEventListener("click", clearProgress);
+
+    // Keyboard answers: 1–9 selects, ← goes back
+    document.addEventListener("keydown", function (e) {
+      if ($("#quiz").hidden || e.metaKey || e.ctrlKey || e.altKey) return;
+      const n = Number(e.key);
+      const btns = document.querySelectorAll("#likert > button");
+      if (n >= 1 && n <= btns.length) btns[n - 1].click();
+      else if (e.key === "ArrowLeft" && idx > 0) { idx -= 1; saveProgress(); renderQuestion(); }
+    });
+
+    // Arriving via a partner invite
+    const invTok = new URLSearchParams(location.search).get("invite");
+    if (invTok) {
+      const m = invTok.match(/^([1-9])-([1-9x])-(sp|so|sx|x)$/);
+      if (m) {
+        try {
+          localStorage.setItem("oe_invite", JSON.stringify({
+            t: Number(m[1]), w: m[2] === "x" ? null : Number(m[2]), i: m[3] === "x" ? null : m[3], ts: Date.now()
+          }));
+        } catch (e) { /* ignore */ }
+      }
+    }
+    const inv = getInvite();
+    const banner = $("#invite-banner");
+    if (inv && banner && $("#results").hidden) {
+      banner.hidden = false;
+      $("#invite-text").innerHTML = "Someone who's a <strong>Type " + inv.t + (inv.w ? "w" + inv.w : "") +
+        "</strong> invited you to compare types. Take any test below — when you finish, you'll get your pairing report.";
+    }
 
     // Result history list
     renderHistory();

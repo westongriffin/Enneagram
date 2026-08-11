@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About &amp; FAQ — Official Enneagram</title>
+  <meta name="description" content="Who's behind Official Enneagram, where the content comes from, what the tests can and can't claim, and answers to common enneagram questions.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-6 -6 120 120'%3E%3Ccircle cx='54' cy='9' r='12' fill='%23eb6834'/%3E%3Ccircle cx='82.9' cy='19.5' r='12' fill='%23eb6834'/%3E%3Ccircle cx='25.1' cy='19.5' r='12' fill='%23eb6834'/%3E%3Ccircle cx='98.3' cy='46.2' r='12' fill='%231baf7a'/%3E%3Ccircle cx='93' cy='76.5' r='12' fill='%231baf7a'/%3E%3Ccircle cx='69.4' cy='96.3' r='12' fill='%231baf7a'/%3E%3Ccircle cx='38.6' cy='96.3' r='12' fill='%232a78d6'/%3E%3Ccircle cx='15' cy='76.5' r='12' fill='%232a78d6'/%3E%3Ccircle cx='9.7' cy='46.2' r='12' fill='%232a78d6'/%3E%3C/svg%3E">
+  <meta property="og:site_name" content="Official Enneagram">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="About &amp; FAQ — Official Enneagram">
+  <meta property="og:description" content="Who's behind Official Enneagram, where the content comes from, what the tests can and can't claim, and answers to common enneagram questions.">
+  <meta property="og:url" content="https://www.officialenneagram.com/">
+  <meta property="og:image" content="https://www.officialenneagram.com/assets/social-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="apple-touch-icon" href="/assets/icon-180.png">
+  <meta name="theme-color" content="#f9f9f7" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0d0d0d" media="(prefers-color-scheme: dark)">
+  <script>
+    /* Resolve theme before first paint: light default, dark or auto if chosen. */
+    (function () {
+      var t; try { t = localStorage.getItem("theme"); } catch (e) {}
+      var dark = t === "dark" || (t === "auto" && window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches);
+      document.documentElement.dataset.theme = dark ? "dark" : "light";
+    })();
+  </script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site">
+    <div class="bar">
+      <a class="brand" href="index.html"><svg width="21" height="21" viewBox="-6 -6 120 120" aria-hidden="true"><circle cx="54" cy="9" r="12" fill="#eb6834"/><circle cx="82.9" cy="19.5" r="12" fill="#eb6834"/><circle cx="25.1" cy="19.5" r="12" fill="#eb6834"/><circle cx="98.3" cy="46.2" r="12" fill="#1baf7a"/><circle cx="93" cy="76.5" r="12" fill="#1baf7a"/><circle cx="69.4" cy="96.3" r="12" fill="#1baf7a"/><circle cx="38.6" cy="96.3" r="12" fill="#2a78d6"/><circle cx="15" cy="76.5" r="12" fill="#2a78d6"/><circle cx="9.7" cy="46.2" r="12" fill="#2a78d6"/></svg><span class="brand-text">Official <b>Ennea</b>gram</span></a>
+      <nav class="main" id="site-nav" aria-label="Main">
+        <a href="index.html">Overview</a>
+        <a href="types.html">Types</a>
+        <a href="growth.html">Growth</a>
+        <a href="mislabelings.html">Mislabelings</a>
+        <a href="instincts.html">Instincts</a>
+        <a href="relationships.html">Pairings</a>
+        <a href="similarities.html">Similarities</a>
+        <a href="tests.html">Tests</a>
+      </nav>
+      <button id="nav-toggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Menu">
+        <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M2 5h16M2 10h16M2 15h16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </button>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch theme">🌙</button>
+    </div>
+  </header>
+
+  <main>
+    <h1>About &amp; FAQ</h1>
+    <p>
+      Official Enneagram is an independent educational guide to the enneagram — the nine types,
+      their wings, arrows, instincts and subtypes — built around one conviction: <strong>honest
+      typing beats flattering typing</strong>. That's why the tests screen for clinical
+      look-alikes, warn you when your answers look idealized, and tell you when your result is a
+      close call instead of pretending the number settled it.
+    </p>
+
+    <h2>Where the content comes from</h2>
+    <p>
+      Type descriptions synthesize the common ground of the major enneagram traditions — the
+      Riso–Hudson levels-of-development work, Helen Palmer's narrative tradition, and Beatrice
+      Chestnut's 27-subtype model — favoring motivation-first framing where traditions disagree.
+      The mislabeling guide draws on published clinical descriptions of ADHD, anxiety, mood,
+      autism-spectrum, and trauma-related conditions, written for self-observation rather than
+      diagnosis.
+    </p>
+
+    <h2>What the tests can and can't do</h2>
+    <p>
+      The tests are serious self-report instruments — motivation-first items, reverse-keyed
+      questions, validity checks, look-alike screening — but they are <strong>not normed or
+      clinically validated</strong>, and no personality test diagnoses anything. Results are
+      hypotheses to test against sustained self-observation. Details on the
+      <a href="tests.html">tests page</a>.
+    </p>
+
+    <h2>Frequently asked questions</h2>
+    <div id="faq"></div>
+
+    <div class="callout caution">
+      <p><strong>A note on the name.</strong> "Official Enneagram" is our site's name, not a claim
+      of authority over the enneagram itself — no one owns the enneagram, and no central body
+      certifies it. The name is a commitment: to be the most complete, most honest version of
+      this material we can build.</p>
+    </div>
+  </main>
+
+  <footer class="site">
+    <p>Official Enneagram — an educational resource. Level sketches condense the Riso–Hudson
+    levels-of-development tradition; practices are standard inner-work staples matched to type,
+    not clinical advice. <a href="about.html">About &amp; FAQ</a> · <a href="search.html">Search</a></p>
+  </footer>
+
+  <script>
+    const FAQ = [
+      ["Can my type change?", "Most traditions say no — your core type is stable, formed early. What changes is your health level (the same Nine can be checked-out or quietly commanding), your wing lean, and which instinct dominates. If your 'type' seems to change with your mood or circumstances, you're likely seeing arrows, subtypes, or a mistype — not a new type."],
+      ["Is the enneagram scientific?", "Partly at best. The type descriptions resonate widely, but the enneagram lacks the peer-reviewed validation of models like the Big Five. We treat it as a powerful self-observation framework rather than settled science — useful the way a good map is useful, without claiming to be the territory. Our tests borrow rigor where they can (validity checks, screening scales) and say so plainly where they can't."],
+      ["What's the difference between a wing and a subtype?", "Your wing is a neighboring type flavoring your core type (a 4w5 is a Four leaning Five-ish). Your subtype is your core type expressed through your dominant instinct (an sx4 is a Four whose intensity runs through one-to-one bonds). Wing changes the flavor; instinct changes the arena."],
+      ["Two types both feel like me. Which am I?", "Ask which core fear is yours, not which behaviors — behaviors overlap constantly. Use the side-by-side comparer on the Similarities page, check whether one of the two is a countertype of the other's look-alikes, and read both types' unhealthy descriptions: people usually recognize their own worst day faster than their best."],
+      ["My test said one type but it doesn't feel right.", "Check three things in order: the close-call note (was your runner-up within a few points?), the mislabeling flags (ADHD, anxiety, depression and others inflate specific types), and the countertype of your top type (countertypes contradict their own type's stereotype). The exhaustive test with the sensitivity check untangles most of these."],
+      ["Why does my result change between tests?", "Short tests are noisier than long ones, mood colors self-report, and close calls can flip on a handful of answers. Your result history (on the tests page) shows the pattern across attempts — the type that keeps appearing near the top is more informative than any single run."],
+      ["Is my data stored anywhere?", "Only in your own browser. Results, history, progress, and practice check-ins live in localStorage on your device; share links encode scores in the URL itself. This site has no server, no accounts, and no analytics."]
+    ];
+    document.getElementById("faq").innerHTML = FAQ.map(function (f) {
+      return '<details class="card lookalikes"><summary>' + f[0] + "</summary><p>" + f[1] + "</p></details>";
+    }).join("");
+  </script>
+  <script src="js/theme.js"></script>
+  <script src="js/profile.js"></script>
+</body>
+</html>

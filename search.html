@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>The Nine Types — Official Enneagram</title>
-  <meta name="description" content="Full profiles of all nine enneagram types: core fears and desires, wings, growth and stress arrows, and the mislabelings each type attracts.">
+  <title>Search — Official Enneagram</title>
+  <meta name="description" content="Search everything on Official Enneagram: types, wings, subtypes, pairings, growth paths, and mislabelings.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-6 -6 120 120'%3E%3Ccircle cx='54' cy='9' r='12' fill='%23eb6834'/%3E%3Ccircle cx='82.9' cy='19.5' r='12' fill='%23eb6834'/%3E%3Ccircle cx='25.1' cy='19.5' r='12' fill='%23eb6834'/%3E%3Ccircle cx='98.3' cy='46.2' r='12' fill='%231baf7a'/%3E%3Ccircle cx='93' cy='76.5' r='12' fill='%231baf7a'/%3E%3Ccircle cx='69.4' cy='96.3' r='12' fill='%231baf7a'/%3E%3Ccircle cx='38.6' cy='96.3' r='12' fill='%232a78d6'/%3E%3Ccircle cx='15' cy='76.5' r='12' fill='%232a78d6'/%3E%3Ccircle cx='9.7' cy='46.2' r='12' fill='%232a78d6'/%3E%3C/svg%3E">
   <meta property="og:site_name" content="Official Enneagram">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="The Nine Types — Official Enneagram">
-  <meta property="og:description" content="Full profiles of all nine enneagram types: core fears and desires, wings, growth and stress arrows, and the mislabelings each type attracts.">
-  <meta property="og:url" content="https://www.officialenneagram.com/types.html">
+  <meta property="og:title" content="Search — Official Enneagram">
+  <meta property="og:description" content="Search everything on Official Enneagram: types, wings, subtypes, pairings, growth paths, and mislabelings.">
+  <meta property="og:url" content="https://www.officialenneagram.com/">
   <meta property="og:image" content="https://www.officialenneagram.com/assets/social-card.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -18,13 +18,6 @@
   <link rel="apple-touch-icon" href="/assets/icon-180.png">
   <meta name="theme-color" content="#f9f9f7" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0d0d0d" media="(prefers-color-scheme: dark)">
-  <script>
-    /* Old deep links (types.html#type-7) now live on their own pages. */
-    (function () {
-      var m = location.hash.match(/^#type-([1-9])$/);
-      if (m) location.replace("type-" + m[1] + ".html");
-    })();
-  </script>
   <script>
     /* Resolve theme before first paint: light default, dark or auto if chosen. */
     (function () {
@@ -42,7 +35,7 @@
       <a class="brand" href="index.html"><svg width="21" height="21" viewBox="-6 -6 120 120" aria-hidden="true"><circle cx="54" cy="9" r="12" fill="#eb6834"/><circle cx="82.9" cy="19.5" r="12" fill="#eb6834"/><circle cx="25.1" cy="19.5" r="12" fill="#eb6834"/><circle cx="98.3" cy="46.2" r="12" fill="#1baf7a"/><circle cx="93" cy="76.5" r="12" fill="#1baf7a"/><circle cx="69.4" cy="96.3" r="12" fill="#1baf7a"/><circle cx="38.6" cy="96.3" r="12" fill="#2a78d6"/><circle cx="15" cy="76.5" r="12" fill="#2a78d6"/><circle cx="9.7" cy="46.2" r="12" fill="#2a78d6"/></svg><span class="brand-text">Official <b>Ennea</b>gram</span></a>
       <nav class="main" id="site-nav" aria-label="Main">
         <a href="index.html">Overview</a>
-        <a href="types.html" aria-current="page">Types</a>
+        <a href="types.html">Types</a>
         <a href="growth.html">Growth</a>
         <a href="mislabelings.html">Mislabelings</a>
         <a href="instincts.html">Instincts</a>
@@ -57,47 +50,25 @@
     </div>
   </header>
 
-    <main>
-    <h1>The Nine Types</h1>
-    <p>
-      Nine patterns, three centers. Tap a type for its full profile — fears and desires, wings,
-      growth path, best pairings, how to communicate with them, look-alikes, and subtypes.
-    </p>
-    <div id="type-hub"></div>
-    <div class="callout">
-      <p><strong>Not sure which is you?</strong> <a href="tests.html">Take a test</a> — or if two
-      types both feel close, <a href="similarities.html">compare them side by side</a>.</p>
-    </div>
+  <main>
+    <h1>Search</h1>
+    <p class="quiz-meta">Search the types, subtypes, pairings, growth paths, and look-alikes.</p>
+    <p><input type="search" id="q" placeholder="Try: countertype, 4 and 8, ADHD, sx7, wing…" autofocus></p>
+    <div id="search-results"></div>
   </main>
 
   <footer class="site">
-    <p>Official Enneagram — an educational resource. Type descriptions synthesize the common ground of the
-    major enneagram traditions (Riso–Hudson, Palmer, Chestnut); where traditions disagree, we favor
-    motivation-first framing.</p>
+    <p>Official Enneagram — an educational resource. Level sketches condense the Riso–Hudson
+    levels-of-development tradition; practices are standard inner-work staples matched to type,
+    not clinical advice. <a href="about.html">About &amp; FAQ</a> · <a href="search.html">Search</a></p>
   </footer>
 
   <script src="js/data.js"></script>
+  <script src="js/growth.js"></script>
+  <script src="js/pairs.js"></script>
+  <script src="js/instincts.js"></script>
   <script src="js/practical.js"></script>
-  <script>
-    (function () {
-      const CENTERS = [
-        { key: "center-body", label: "Body · Gut", note: "Instinct and anger", types: [8, 9, 1] },
-        { key: "center-heart", label: "Heart · Feeling", note: "Image and shame", types: [2, 3, 4] },
-        { key: "center-head", label: "Head · Thinking", note: "Strategy and fear", types: [5, 6, 7] }
-      ];
-      document.getElementById("type-hub").innerHTML = CENTERS.map(function (c) {
-        return '<p class="kicker ' + c.key + '" style="margin-top:1.75rem">' + c.label + " — " + c.note + "</p>" +
-          '<div class="grid cols-3">' + c.types.map(function (n) {
-            const t = ENNEAGRAM_TYPES[n];
-            return '<a class="card hoverable type-card ' + c.key + '" href="type-' + n + '.html">' +
-              '<span class="type-num">' + n + "</span>" +
-              "<h2 class='no-rule'>" + t.name.replace("The ", "") + "</h2>" +
-              "<p>" + PRACTICAL[n].essence + "</p>" +
-              '<span class="quiz-meta">Explore Type ' + n + " →</span></a>";
-          }).join("") + "</div>";
-      }).join("");
-    })();
-  </script>
+  <script src="js/search.js"></script>
   <script src="js/theme.js"></script>
   <script src="js/profile.js"></script>
 </body>

@@ -19,10 +19,12 @@
   <meta name="theme-color" content="#f9f9f7" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0d0d0d" media="(prefers-color-scheme: dark)">
   <script>
-    /* Set theme before first paint: light by default, dark only if chosen. */
+    /* Resolve theme before first paint: light default, dark or auto if chosen. */
     (function () {
       var t; try { t = localStorage.getItem("theme"); } catch (e) {}
-      document.documentElement.dataset.theme = t === "dark" ? "dark" : "light";
+      var dark = t === "dark" || (t === "auto" && window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches);
+      document.documentElement.dataset.theme = dark ? "dark" : "light";
     })();
   </script>
   <link rel="stylesheet" href="css/style.css">
@@ -72,7 +74,7 @@
   <footer class="site">
     <p>Official Enneagram — an educational resource. Level sketches condense the Riso–Hudson
     levels-of-development tradition; practices are standard inner-work staples matched to type,
-    not clinical advice.</p>
+    not clinical advice. <a href="about.html">About &amp; FAQ</a> · <a href="search.html">Search</a></p>
   </footer>
 
   <script src="js/data.js"></script>
@@ -106,16 +108,44 @@
             '<div class="level level-unhealthy"><p class="kicker">Unhealthy</p><p>' + g.unhealthy + '</p></div>' +
           '</div>' +
           '<div class="callout flag" style="margin:1.25rem 0"><p><strong>Early-warning sign:</strong> ' + g.watchFor + '</p></div>' +
-          '<h3>Practices</h3><ul>' +
-            g.practices.map(function (p) { return "<li>" + p + "</li>"; }).join("") +
+          '<h3>Practices <span class="quiz-meta" id="prac-count-' + n + '"></span></h3>' +
+          '<ul class="practice-list" data-type="' + n + '">' +
+            g.practices.map(function (p, pi) {
+              return '<li><label><input type="checkbox" data-p="' + pi + '"> <span>' + p + "</span></label></li>";
+            }).join("") +
           '</ul>' +
           '<p><span class="pill">Growth → ' + t.growthArrow.to + '</span>' + t.growthArrow.text +
           ' <span class="pill">Stress → ' + t.stressArrow.to + '</span>' + t.stressArrow.text + '</p>' +
-          '<p class="quiz-meta"><a href="types.html#type-' + n + '">Full Type ' + n + ' profile</a> · ' +
+          '<p class="quiz-meta"><a href="type-' + n + '.html">Full Type ' + n + ' profile</a> · ' +
           '<a href="instincts.html">Your instinct blind spot matters here too →</a></p>';
         wrap.appendChild(sec);
       }
       document.getElementById("type-jump").innerHTML = jump.join("");
+
+      // Practice tracker — checkbox state persists in this browser.
+      const PKEY = "oe_practices";
+      function loadP() { try { return JSON.parse(localStorage.getItem(PKEY) || "{}"); } catch (e) { return {}; } }
+      function count(nn, st) {
+        const done = (st[nn] || []).filter(Boolean).length;
+        const el = document.getElementById("prac-count-" + nn);
+        if (el) el.textContent = done ? "· " + done + "/4 in practice" : "";
+      }
+      const state = loadP();
+      document.querySelectorAll(".practice-list").forEach(function (ul) {
+        const nn = ul.dataset.type;
+        ul.querySelectorAll("input").forEach(function (cb, pi) {
+          cb.checked = !!(state[nn] && state[nn][pi]);
+        });
+        count(nn, state);
+        ul.addEventListener("change", function (e) {
+          const st = loadP();
+          st[nn] = st[nn] || [false, false, false, false];
+          st[nn][Number(e.target.dataset.p)] = e.target.checked;
+          try { localStorage.setItem(PKEY, JSON.stringify(st)); } catch (err) { /* ignore */ }
+          count(nn, st);
+        });
+      });
+
       if (location.hash) {
         const target = document.getElementById(location.hash.slice(1));
         if (target) target.scrollIntoView({ behavior: "instant", block: "start" });
@@ -123,5 +153,6 @@
     })();
   </script>
   <script src="js/theme.js"></script>
+  <script src="js/profile.js"></script>
 </body>
 </html>
