@@ -208,6 +208,28 @@ nav.main a[aria-current="page"] { background: var(--accent); color: #fff; }
 .brand svg { display: block; margin-right: 0.5rem; }
 .brand-text b { font-weight: inherit; color: var(--accent); }
 
+/* ---------- Differentiator strip under the header ---------- */
+.usp-bar {
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--c-head) 10%, var(--surface)),
+    color-mix(in srgb, var(--c-heart) 10%, var(--surface)));
+  border-bottom: 1px solid var(--hairline);
+  text-align: center;
+  font-size: 0.84rem;
+  padding: 0.45rem 1rem;
+}
+@supports not (background: color-mix(in srgb, red 50%, blue)) {
+  .usp-bar { background: var(--surface); }
+}
+.usp-bar a { color: var(--ink-2); }
+.usp-bar strong { color: var(--ink); }
+.usp-bar a:hover { text-decoration: none; }
+.usp-bar a:hover strong { color: var(--accent); }
+@media (max-width: 700px) {
+  .usp-long { display: none; }
+  .usp-bar { font-size: 0.8rem; }
+}
+
 /* ---------- Hero ---------- */
 .hero {
   position: relative;
