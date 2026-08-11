@@ -189,6 +189,57 @@
     return { types: types, confounds: confounds, instincts: instincts, validity: validity };
   }
 
+  /* Sensitivity analysis: recompute type scores excluding every item whose
+   * content overlaps a flagged screening scale (dual-loaded Likert items and
+   * MC questions with a flagged-confound option). Pure screeners never touch
+   * type scores, so this isolates exactly the contested contribution.
+   */
+  function computeAdjustedTypes(flaggedKeys) {
+    const hasFlagged = function (c) {
+      return c && flaggedKeys.some(function (k) { return c[k]; });
+    };
+    const typeScore = {}, typeMax = {};
+    for (let t = 1; t <= 9; t++) { typeScore[t] = 0; typeMax[t] = 0; }
+    let excluded = 0;
+
+    bank.forEach(function (q, i) {
+      const a = answers[i];
+      if (a == null) return;
+      if (q.options) {
+        const contested = q.options.some(function (o) { return hasFlagged(o.c); });
+        if (contested) {
+          if (q.options.some(function (o) { return o.w && Object.keys(o.w).length; })) excluded++;
+          return;
+        }
+        const picked = q.options[a - 1];
+        if (picked.w) Object.keys(picked.w).forEach(function (t) { typeScore[t] += picked.w[t]; });
+        const bestW = {};
+        q.options.forEach(function (o) {
+          if (o.w) Object.keys(o.w).forEach(function (t) { bestW[t] = Math.max(bestW[t] || 0, o.w[t]); });
+        });
+        Object.keys(bestW).forEach(function (t) { typeMax[t] += bestW[t]; });
+        return;
+      }
+      if (hasFlagged(q.c)) {
+        if (q.w) excluded++;
+        return;
+      }
+      let s = (a - 1) / 4;
+      if (q.rev) s = 1 - s;
+      if (q.w) Object.keys(q.w).forEach(function (t) {
+        typeScore[t] += s * q.w[t];
+        typeMax[t] += q.w[t];
+      });
+    });
+
+    const types = [];
+    for (let t = 1; t <= 9; t++) {
+      types.push({ type: t, pct: typeMax[t] ? Math.round(100 * typeScore[t] / typeMax[t]) : 0 });
+    }
+    types.sort(function (a, b) { return b.pct - a.pct || a.type - b.type; });
+    return { types: types, excluded: excluded };
+  }
+
   function wingFor(topType, types) {
     const byType = {};
     types.forEach(function (r) { byType[r.type] = r.pct; });
@@ -287,7 +338,8 @@
         bank: bankName,
         types: result.types,
         confounds: result.confounds,
-        instincts: result.instincts || null
+        instincts: result.instincts || null,
+        adjusted: result.adjusted || null
       });
       localStorage.setItem(HISTORY_KEY, JSON.stringify(h.slice(0, 50)));
     } catch (e) { /* storage unavailable (private mode etc.) — skip silently */ }
@@ -380,6 +432,13 @@
         h += "<p><strong>" + esc(f.scale.label) + " (screen score " + f.pct + "/100) — overlaps Type " +
              f.hitTypes.join(" and Type ") + ".</strong> " + esc(f.scale.explain) + "</p>";
       });
+      if (result.adjusted) {
+        const adjTop = result.adjusted.types[0];
+        h += "<p><strong>Sensitivity check:</strong> with the " + result.adjusted.excluded +
+             " flag-overlapping question" + (result.adjusted.excluded === 1 ? "" : "s") + " excluded, the top type is Type " +
+             adjTop.type + " — " + esc(ENNEAGRAM_TYPES[adjTop.type].name) +
+             (adjTop.type === top.type ? " (unchanged — the result is robust to the overlap)." : " (changed — read both profiles before settling).") + "</p>";
+      }
     } else {
       h += "<p><strong>No mislabeling flags were raised</strong> by the screening items.</p>";
     }
@@ -410,6 +469,15 @@
   function showResults() {
     $("#progress-fill").style.width = "100%";
     const result = computeScores();
+    // When look-alike flags fire, attach a confound-adjusted view of the
+    // type ranking so the flag becomes actionable, not just a warning.
+    const flags = buildFlags(result);
+    if (flags.length) {
+      const adj = computeAdjustedTypes(flags.map(function (f) { return f.key; }));
+      if (adj.excluded > 0) {
+        result.adjusted = { keys: flags.map(function (f) { return f.key; }), types: adj.types, excluded: adj.excluded };
+      }
+    }
     saveToHistory(result);
     renderResults(result, { shared: false });
   }
@@ -515,6 +583,32 @@
           f.hitTypes.join(" and Type ") + " result</h4>" +
           "<p>" + esc(f.scale.explain) + "</p></div>";
       });
+
+      // Sensitivity check: the same ranking with contested items excluded.
+      if (result.adjusted) {
+        const adjTop = result.adjusted.types[0];
+        const stdTop3 = result.types.slice(0, 3).map(function (r) { return "Type " + r.type + " (" + r.pct + ")"; }).join(" · ");
+        const adjTop3 = result.adjusted.types.slice(0, 3).map(function (r) { return "Type " + r.type + " (" + r.pct + ")"; }).join(" · ");
+        html += '<div class="callout"><p class="kicker">Sensitivity check</p>' +
+          "<p>We re-scored your types after excluding the " + result.adjusted.excluded +
+          " question" + (result.adjusted.excluded === 1 ? "" : "s") +
+          " whose content overlaps your flagged screen" + (result.adjusted.keys.length === 1 ? "" : "s") +
+          " (" + result.adjusted.keys.map(function (k) { return esc(CONFOUNDS[k].label); }).join("; ") + "):</p>" +
+          "<p><strong>Standard scoring:</strong> " + stdTop3 + "<br>" +
+          "<strong>Contested items excluded:</strong> " + adjTop3 + "</p>";
+        if (adjTop.type === top.type) {
+          html += "<p><strong>Your top type held.</strong> Excluding the contested items doesn't change the ranking, " +
+            "which is genuinely reassuring — your Type " + top.type + " result doesn't depend on the overlap.</p>";
+        } else {
+          html += "<p><strong>Your top type changed.</strong> Without the contested items, Type " + adjTop.type + " — " +
+            esc(ENNEAGRAM_TYPES[adjTop.type].name) + " leads instead. That's the flag's warning made concrete: read both " +
+            '<a href="types.html#type-' + top.type + '">Type ' + top.type + "</a> and " +
+            '<a href="types.html#type-' + adjTop.type + '">Type ' + adjTop.type + "</a> profiles, and " +
+            '<a href="similarities.html?a=' + top.type + "&b=" + adjTop.type + '">how they differ</a>, before settling.</p>';
+        }
+        html += '<p class="quiz-meta">This exclusion removes item-level overlap only — no self-report test can remove ' +
+          "the deeper overlap in how a clinical pattern colors your reading of every question. The flag's advice stands either way.</p></div>";
+      }
       html += '<div class="callout caution"><p><strong>Important:</strong> this test cannot diagnose ADHD, anxiety, depression, autism, PTSD, or any other condition. If a flag above resonates, the useful next step is a conversation with a qualified clinician — and holding your enneagram typing loosely until the picture is clearer.</p></div>';
     } else {
       html += '<div class="callout"><p><strong>No mislabeling flags raised.</strong> Your answers to the screening items didn\'t show the patterns that most commonly masquerade as enneagram types. As always, treat your result as a hypothesis to test against self-observation.</p></div>';
