@@ -149,8 +149,7 @@ header.site .bar {
   display: flex; align-items: center; gap: 0.75rem;
   padding: 0.6rem 1.25rem;
 }
-.brand { font-weight: 800; color: var(--ink); font-size: 1.1rem; letter-spacing: -0.01em; flex: none; }
-.brand span { color: var(--accent); }
+.brand { font-weight: 800; color: var(--ink); font-size: 1.05rem; letter-spacing: -0.01em; flex: none; }
 .brand:hover { text-decoration: none; }
 nav.main {
   display: flex; gap: 0.25rem; margin-left: auto;
@@ -159,8 +158,8 @@ nav.main {
 }
 nav.main::-webkit-scrollbar { display: none; }
 nav.main a {
-  color: var(--ink-2); padding: 0.35rem 0.75rem; border-radius: 999px;
-  font-size: 0.92rem; font-weight: 500; flex: none;
+  color: var(--ink-2); padding: 0.33rem 0.6rem; border-radius: 999px;
+  font-size: 0.9rem; font-weight: 500; flex: none;
 }
 nav.main a:hover { background: var(--accent-soft); text-decoration: none; color: var(--ink); }
 nav.main a[aria-current="page"] { background: var(--accent); color: #fff; }
@@ -177,7 +176,8 @@ nav.main a[aria-current="page"] { background: var(--accent); color: #fff; }
 
 /* Colored brand mark next to the wordmark */
 .brand { display: inline-flex; align-items: center; }
-.brand svg { display: block; margin-right: 0.45rem; }
+.brand svg { display: block; margin-right: 0.5rem; }
+.brand-text b { font-weight: inherit; color: var(--accent); }
 
 /* ---------- Hero ---------- */
 .hero {

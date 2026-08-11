@@ -376,10 +376,10 @@
     const t = ENNEAGRAM_TYPES[top.type];
     const wing = wingFor(top.type, lastResult.types);
     const url = shareUrl();
-    const text = "I got Type " + top.type + " — " + t.name + " (" + wing.label + ") on the enneaguide enneagram test.";
+    const text = "I got Type " + top.type + " — " + t.name + " (" + wing.label + ") on the Official Enneagram test.";
     const status = $("#share-status");
     if (navigator.share) {
-      navigator.share({ title: "My enneagram result", text: text, url: url }).catch(function () {});
+      navigator.share({ title: "My Official Enneagram result", text: text, url: url }).catch(function () {});
     } else if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text + " " + url).then(function () {
         status.textContent = "Link copied to clipboard.";
@@ -402,7 +402,7 @@
     const date = new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
 
     let h = "";
-    h += '<p class="p-brand">enneaguide · enneagram test result · ' + esc(date) + "</p>";
+    h += '<p class="p-brand">Official Enneagram · test result · ' + esc(date) + "</p>";
     h += "<h1>Type " + top.type + " — " + esc(t.name) + "</h1>";
     h += "<p><strong>" + esc(BANKS[bankName].label) + "</strong> · Likely wing: <strong>" + esc(wing.label) +
          "</strong> · Runner-up: Type " + second.type + " — " + esc(ENNEAGRAM_TYPES[second.type].name) + "</p>";
