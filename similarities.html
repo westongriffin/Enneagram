@@ -31,7 +31,7 @@
   <header class="site">
     <div class="bar">
       <a class="brand" href="index.html"><svg width="21" height="21" viewBox="-6 -6 120 120" aria-hidden="true"><circle cx="54" cy="9" r="12" fill="#eb6834"/><circle cx="82.9" cy="19.5" r="12" fill="#eb6834"/><circle cx="25.1" cy="19.5" r="12" fill="#eb6834"/><circle cx="98.3" cy="46.2" r="12" fill="#1baf7a"/><circle cx="93" cy="76.5" r="12" fill="#1baf7a"/><circle cx="69.4" cy="96.3" r="12" fill="#1baf7a"/><circle cx="38.6" cy="96.3" r="12" fill="#2a78d6"/><circle cx="15" cy="76.5" r="12" fill="#2a78d6"/><circle cx="9.7" cy="46.2" r="12" fill="#2a78d6"/></svg><span class="brand-text">Official <b>Ennea</b>gram</span></a>
-      <nav class="main" aria-label="Main">
+      <nav class="main" id="site-nav" aria-label="Main">
         <a href="index.html">Overview</a>
         <a href="types.html">Types</a>
         <a href="growth.html">Growth</a>
@@ -41,6 +41,9 @@
         <a href="similarities.html" aria-current="page">Similarities</a>
         <a href="tests.html">Tests</a>
       </nav>
+      <button id="nav-toggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Menu">
+        <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M2 5h16M2 10h16M2 15h16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </button>
       <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch theme">🌙</button>
     </div>
   </header>

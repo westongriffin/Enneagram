@@ -164,6 +164,35 @@ nav.main a {
 nav.main a:hover { background: var(--accent-soft); text-decoration: none; color: var(--ink); }
 nav.main a[aria-current="page"] { background: var(--accent); color: #fff; }
 
+/* Hamburger — shown only when the inline nav can't fit */
+.nav-toggle {
+  display: none; flex: none; cursor: pointer;
+  width: 2.5rem; height: 2.5rem; border-radius: 10px;
+  border: 1px solid var(--border); background: var(--page);
+  color: var(--ink); padding: 0;
+  align-items: center; justify-content: center;
+  margin-left: auto;
+}
+@media (max-width: 920px) {
+  header.site .bar { position: relative; }
+  .nav-toggle { display: inline-flex; }
+  nav.main {
+    display: none;
+    position: absolute; top: 100%; left: 0; right: 0;
+    margin: 0; padding: 0.4rem 0.75rem 0.75rem;
+    background: var(--surface);
+    border-bottom: 1px solid var(--hairline);
+    box-shadow: var(--shadow-lift);
+    white-space: normal;
+  }
+  header.site.nav-open nav.main { display: block; }
+  nav.main a {
+    display: block; width: 100%;
+    padding: 0.8rem 0.9rem; margin-top: 0.25rem;
+    font-size: 1.05rem; border-radius: 10px;
+  }
+}
+
 /* Theme toggle */
 .theme-toggle {
   flex: none; cursor: pointer;

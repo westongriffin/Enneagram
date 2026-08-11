@@ -23,5 +23,22 @@
     if (btn) btn.addEventListener("click", function () {
       apply(current() === "dark" ? "light" : "dark");
     });
+
+    // Mobile menu
+    var navBtn = document.getElementById("nav-toggle");
+    var header = document.querySelector("header.site");
+    if (navBtn && header) {
+      navBtn.addEventListener("click", function () {
+        var open = header.classList.toggle("nav-open");
+        navBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+      // Close when tapping outside the header or picking a link
+      document.addEventListener("click", function (e) {
+        if (header.classList.contains("nav-open") && !header.contains(e.target)) {
+          header.classList.remove("nav-open");
+          navBtn.setAttribute("aria-expanded", "false");
+        }
+      });
+    }
   });
 })();
