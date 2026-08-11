@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Type Pairings in Love — Official Enneagram</title>
+  <meta name="description" content="Enneagram romantic compatibility: pick any two types (with wings) for a compatibility score, the spark, the friction, and how the pairing grows — plus a full 9×9 pairing map.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-6 -6 120 120'%3E%3Ccircle cx='54' cy='9' r='12' fill='%23eb6834'/%3E%3Ccircle cx='82.9' cy='19.5' r='12' fill='%23eb6834'/%3E%3Ccircle cx='25.1' cy='19.5' r='12' fill='%23eb6834'/%3E%3Ccircle cx='98.3' cy='46.2' r='12' fill='%231baf7a'/%3E%3Ccircle cx='93' cy='76.5' r='12' fill='%231baf7a'/%3E%3Ccircle cx='69.4' cy='96.3' r='12' fill='%231baf7a'/%3E%3Ccircle cx='38.6' cy='96.3' r='12' fill='%232a78d6'/%3E%3Ccircle cx='15' cy='76.5' r='12' fill='%232a78d6'/%3E%3Ccircle cx='9.7' cy='46.2' r='12' fill='%232a78d6'/%3E%3C/svg%3E">
+  <meta property="og:site_name" content="Official Enneagram">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Type Pairings in Love — Official Enneagram">
+  <meta property="og:description" content="Enneagram romantic compatibility: pick any two types (with wings) for a compatibility score, the spark, the friction, and how the pairing grows — plus a full 9×9 pairing map.">
+  <meta property="og:url" content="https://www.officialenneagram.com/relationships.html">
+  <meta property="og:image" content="https://www.officialenneagram.com/assets/social-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="apple-touch-icon" href="/assets/icon-180.png">
+  <meta name="theme-color" content="#f9f9f7" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0d0d0d" media="(prefers-color-scheme: dark)">
+  <script>
+    /* Set theme before first paint: light by default, dark only if chosen. */
+    (function () {
+      var t; try { t = localStorage.getItem("theme"); } catch (e) {}
+      document.documentElement.dataset.theme = t === "dark" ? "dark" : "light";
+    })();
+  </script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site">
+    <div class="bar">
+      <a class="brand" href="index.html"><svg width="21" height="21" viewBox="-6 -6 120 120" aria-hidden="true"><circle cx="54" cy="9" r="12" fill="#eb6834"/><circle cx="82.9" cy="19.5" r="12" fill="#eb6834"/><circle cx="25.1" cy="19.5" r="12" fill="#eb6834"/><circle cx="98.3" cy="46.2" r="12" fill="#1baf7a"/><circle cx="93" cy="76.5" r="12" fill="#1baf7a"/><circle cx="69.4" cy="96.3" r="12" fill="#1baf7a"/><circle cx="38.6" cy="96.3" r="12" fill="#2a78d6"/><circle cx="15" cy="76.5" r="12" fill="#2a78d6"/><circle cx="9.7" cy="46.2" r="12" fill="#2a78d6"/></svg><span class="brand-text">Official <b>Ennea</b>gram</span></a>
+      <nav class="main" aria-label="Main">
+        <a href="index.html">Overview</a>
+        <a href="types.html">Types</a>
+        <a href="growth.html">Growth</a>
+        <a href="mislabelings.html">Mislabelings</a>
+        <a href="instincts.html">Instincts</a>
+        <a href="relationships.html" aria-current="page">Pairings</a>
+        <a href="similarities.html">Similarities</a>
+        <a href="tests.html">Tests</a>
+      </nav>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch theme">🌙</button>
+    </div>
+  </header>
+
+  <main>
+    <h1>Type Pairings in Love</h1>
+    <p>
+      Pick your type and wing, then your partner's (or crush's — we won't tell), and get the
+      pairing's compatibility score, what sparks it, where it grinds, and how it grows. Wings
+      shift the chemistry, and so do <a href="instincts.html">instincts</a> — shared dominant
+      instincts often predict day-to-day compatibility better than type does.
+    </p>
+    <div class="callout">
+      <p><strong>Read this first:</strong> compatibility scores describe the <em>default</em>
+      friction-and-complement pattern between two type structures at average health. They are not
+      destiny. Two healthy people of the "worst" pairing will beat two unhealthy people of the
+      "best" one, every time — health level, instinct stackings, and plain effort dominate type
+      math.</p>
+    </div>
+
+    <div class="card" id="picker-card">
+      <h2 style="margin-top:0" class="no-rule">Score a pairing</h2>
+      <div class="pair-picker">
+        <fieldset>
+          <legend>You</legend>
+          <label>Type <select id="a-type"></select></label>
+          <label>Wing <select id="a-wing"></select></label>
+          <label>Dominant instinct <select id="a-inst">
+            <option value="">Not sure / skip</option>
+            <option value="sp">sp — Self-Preservation</option>
+            <option value="so">so — Social</option>
+            <option value="sx">sx — Sexual (One-to-One)</option>
+          </select></label>
+        </fieldset>
+        <div class="pair-heart" aria-hidden="true">♥</div>
+        <fieldset>
+          <legend>Your partner</legend>
+          <label>Type <select id="b-type"></select></label>
+          <label>Wing <select id="b-wing"></select></label>
+          <label>Dominant instinct <select id="b-inst">
+            <option value="">Not sure / skip</option>
+            <option value="sp">sp — Self-Preservation</option>
+            <option value="so">so — Social</option>
+            <option value="sx">sx — Sexual (One-to-One)</option>
+          </select></label>
+        </fieldset>
+      </div>
+      <div id="pair-result"></div>
+    </div>
+
+    <h2>The full pairing map</h2>
+    <p>Base scores for every combination — wings not applied. Tap any cell to load that pairing above.</p>
+    <div class="table-scroll">
+      <table class="heatmap" id="heatmap">
+        <caption>Compatibility base score by type pair — by design the scores span 62 (most default friction) to 85 (most naturally complementary)</caption>
+      </table>
+    </div>
+    <p class="heat-legend" id="heat-legend"></p>
+
+    <h2>What actually predicts a good relationship</h2>
+    <div class="grid cols-3 rainbow">
+      <div class="card">
+        <p class="kicker">Health level</p>
+        <p>Every type has healthy, average, and unhealthy versions. A healthy Eight is a devoted
+        protector; an unhealthy one is a tyrant. The number matters less than the altitude.</p>
+      </div>
+      <div class="card">
+        <p class="kicker">The arrows</p>
+        <p>Partners who sit on each other's growth or stress lines get a built-in curriculum: they
+        constantly model what the other most needs to develop — or most needs to avoid.</p>
+      </div>
+      <div class="card">
+        <p class="kicker">Knowing the pattern</p>
+        <p>The real gift of typing a relationship isn't the score — it's knowing in advance
+        <em>which</em> fight you'll keep having, and that it's a pattern, not a verdict on the
+        person.</p>
+      </div>
+    </div>
+
+    <div class="callout caution">
+      <p><strong>Disclaimer:</strong> pairing scores are heuristics from enneagram tradition, not
+      research findings. No personality framework can score two real humans. Use this page for
+      insight into recurring dynamics, not for decisions about real relationships.</p>
+    </div>
+  </main>
+
+  <footer class="site">
+    <p>Official Enneagram — an educational resource, not relationship advice or a substitute for it.</p>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/pairs.js"></script>
+  <script src="js/instincts.js"></script>
+  <script>
+    (function () {
+      "use strict";
+      const $ = (s) => document.querySelector(s);
+      const baseScore = (a, b) => PAIRS[pairKey(a, b)].s;
+
+      /* Score with wings: 70% the core pair + 15% each wing's influence on the
+         other's core type. "Balanced" spreads its 15% across both neighbors. */
+      function wingAdjusted(a, wa, b, wb) {
+        const side = (wing, other, self) => {
+          if (wing === "balanced") {
+            const n = WING_NEIGHBORS[self];
+            return (baseScore(n[0], other) + baseScore(n[1], other)) / 2;
+          }
+          return baseScore(Number(wing), other);
+        };
+        return 0.7 * baseScore(a, b) + 0.15 * side(wa, b, a) + 0.15 * side(wb, a, b);
+      }
+
+      function fillTypeSelect(sel) {
+        for (let t = 1; t <= 9; t++) {
+          const o = document.createElement("option");
+          o.value = t;
+          o.textContent = t + " — " + ENNEAGRAM_TYPES[t].name;
+          sel.appendChild(o);
+        }
+      }
+      function fillWingSelect(sel, type) {
+        const prev = sel.value;
+        sel.innerHTML = "";
+        const n = WING_NEIGHBORS[type];
+        [["balanced", "Balanced / not sure"], [String(n[0]), type + "w" + n[0]], [String(n[1]), type + "w" + n[1]]]
+          .forEach(function (pair) {
+            const o = document.createElement("option");
+            o.value = pair[0]; o.textContent = pair[1];
+            sel.appendChild(o);
+          });
+        if ([...sel.options].some(o => o.value === prev)) sel.value = prev;
+      }
+
+      /* Five score bands, shared by the result descriptor, the heatmap
+         colors, and the legend. Colors are steps of the blue sequential ramp. */
+      const SCORE_BANDS = [
+        { min: 82, label: "Most compatible", note: "naturally complementary defaults", bg: "#104281", ink: "#fff" },
+        { min: 77, label: "Highly compatible", note: "strong default chemistry", bg: "#256abf", ink: "#fff" },
+        { min: 72, label: "Compatible", note: "ordinary, workable friction", bg: "#5598e7", ink: "#0b0b0b" },
+        { min: 68, label: "Somewhat compatible", note: "real work required, real payoff", bg: "#9ec5f4", ink: "#0b0b0b" },
+        { min: -Infinity, label: "Least compatible", note: "a growth pairing — the friction is the curriculum", bg: "#cde2fb", ink: "#0b0b0b" }
+      ];
+      function bandFor(s) {
+        return SCORE_BANDS.find(function (b) { return s >= b.min; });
+      }
+
+      /* True attainable range of the final score (base + wings + instincts),
+         brute-forced from the data so the meter's endpoints are honest. */
+      let MIN_FINAL = Infinity, MAX_FINAL = -Infinity;
+      (function () {
+        const deltas = [-2, 0, 3];
+        for (let a = 1; a <= 9; a++) for (let b = 1; b <= 9; b++) {
+          const was = ["balanced", String(WING_NEIGHBORS[a][0]), String(WING_NEIGHBORS[a][1])];
+          const wbs = ["balanced", String(WING_NEIGHBORS[b][0]), String(WING_NEIGHBORS[b][1])];
+          was.forEach(function (wa) { wbs.forEach(function (wb) {
+            const s = Math.round(wingAdjusted(a, wa, b, wb));
+            deltas.forEach(function (d) {
+              MIN_FINAL = Math.min(MIN_FINAL, s + d);
+              MAX_FINAL = Math.max(MAX_FINAL, s + d);
+            });
+          }); });
+        }
+      })();
+
+      function badges(a, b) {
+        const out = [];
+        if (a === b) out.push("Same type — deep understanding, doubled blind spots");
+        if (ENNEAGRAM_TYPES[a].growthArrow.to === b || ENNEAGRAM_TYPES[b].growthArrow.to === a)
+          out.push("Growth-line pair — one embodies what the other grows toward");
+        if (ENNEAGRAM_TYPES[a].stressArrow.to === b || ENNEAGRAM_TYPES[b].stressArrow.to === a)
+          out.push("Stress-line pair — familiar territory under pressure, handle with care");
+        if (WING_NEIGHBORS[a].indexOf(b) !== -1)
+          out.push("Wing neighbors — each can carry a wing of the other");
+        return out;
+      }
+
+      function render() {
+        const a = Number($("#a-type").value), b = Number($("#b-type").value);
+        const wa = $("#a-wing").value, wb = $("#b-wing").value;
+        const ia = $("#a-inst").value, ib = $("#b-inst").value;
+        const p = PAIRS[pairKey(a, b)];
+        const base = p.s;
+        const wingScore = Math.round(wingAdjusted(a, wa, b, wb));
+        const wingDelta = wingScore - base;
+        const instinct = (ia && ib) ? INSTINCT_PAIRS[instinctPairKey(ia, ib)] : null;
+        const adj = wingScore + (instinct ? instinct.delta : 0);
+        const parts = [];
+        parts.push(wingDelta === 0 ? "wings ±0"
+          : "wings " + (wingDelta > 0 ? "+" : "−") + Math.abs(wingDelta));
+        if (instinct) parts.push("instincts " + (instinct.delta >= 0 ? "+" : "−") + Math.abs(instinct.delta));
+        const deltaText = parts.join(" · ");
+        // The meter spans the true attainable range, so the best possible
+        // pairing fills the bar and the most challenged one nearly empties it.
+        const meterPct = Math.max(0, Math.min(100, (adj - MIN_FINAL) / (MAX_FINAL - MIN_FINAL) * 100));
+        const band = bandFor(adj);
+
+        let h = "";
+        h += '<div class="pair-score"><span class="pair-num">' + adj + '</span>' +
+             '<span class="pair-band" style="background:' + band.bg + ";color:" + band.ink + '">' + band.label + "</span>" +
+             '<div class="pair-meter"><span style="width:' + meterPct + '%"></span></div>' +
+             '<p class="pair-desc"><strong>' + band.label + "</strong> — " + band.note + "</p>" +
+             '<p class="quiz-meta">Base pairing ' + base + " (62–85 band) · " + deltaText +
+             " · with wings and instincts, final scores span " + MIN_FINAL + "–" + MAX_FINAL +
+             ": no pairing is doomed, none is effortless</p></div>";
+        h += "<h3 style='margin-top:1rem'>" + p.t + "</h3>";
+        h += "<p>" + p.blurb + "</p>";
+        const bl = badges(a, b);
+        if (bl.length) h += "<p>" + bl.map(function (x) { return '<span class="pill">' + x + "</span>"; }).join(" ") + "</p>";
+        h += "<p><strong>The spark:</strong> " + p.spark + "</p>";
+        h += "<p><strong>The friction:</strong> " + p.friction + "</p>";
+        h += "<p><strong>How it grows:</strong> " + p.growth + "</p>";
+        if (instinct) h += "<p><strong>Instincts (" + ia + " + " + ib + "):</strong> " + instinct.note + "</p>";
+        h += '<p class="quiz-meta">Profiles: <a href="types.html#type-' + a + '">Type ' + a + "</a> · " +
+             '<a href="types.html#type-' + b + '">Type ' + b + "</a> · " +
+             '<a href="similarities.html?a=' + a + "&b=" + b + '">How these two are similar →</a></p>';
+        $("#pair-result").innerHTML = h;
+      }
+
+      function buildHeatmap() {
+        // Cells share the exact band colors and labels used by the descriptor.
+        let h = "<thead><tr><th scope='col'></th>";
+        for (let c = 1; c <= 9; c++) h += "<th scope='col'>" + c + "</th>";
+        h += "</tr></thead><tbody>";
+        for (let r = 1; r <= 9; r++) {
+          h += "<tr><th scope='row'>" + r + "</th>";
+          for (let c = 1; c <= 9; c++) {
+            const s = baseScore(r, c);
+            const bc = bandFor(s);
+            h += '<td><button type="button" data-a="' + r + '" data-b="' + c +
+                 '" title="' + bc.label + '" style="background:' + bc.bg + ";color:" + bc.ink + '">' + s + "</button></td>";
+          }
+          h += "</tr>";
+        }
+        h += "</tbody>";
+        $("#heatmap").innerHTML = "<caption>Compatibility base score by type pair — by design the scores span 62 (most default friction) to 85 (most naturally complementary)</caption>" + h;
+        $("#heat-legend").innerHTML = SCORE_BANDS.slice().reverse().map(function (b, i, arr) {
+          const lo = b.min === -Infinity ? 62 : b.min;
+          const hi = i === arr.length - 1 ? 85 : arr[i + 1].min - 1;
+          return '<span><i style="background:' + b.bg + '"></i>' + b.label + " (" + lo + "–" + hi + ")</span>";
+        }).join("");
+        $("#heatmap").addEventListener("click", function (e) {
+          const btn = e.target.closest("button[data-a]");
+          if (!btn) return;
+          $("#a-type").value = btn.dataset.a;
+          $("#b-type").value = btn.dataset.b;
+          fillWingSelect($("#a-wing"), Number(btn.dataset.a));
+          fillWingSelect($("#b-wing"), Number(btn.dataset.b));
+          render();
+          $("#picker-card").scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      }
+
+      fillTypeSelect($("#a-type"));
+      fillTypeSelect($("#b-type"));
+      $("#b-type").value = "9";
+      fillWingSelect($("#a-wing"), 1);
+      fillWingSelect($("#b-wing"), 9);
+      ["a-type", "b-type"].forEach(function (id) {
+        $("#" + id).addEventListener("change", function () {
+          fillWingSelect($("#" + id[0] + "-wing"), Number(this.value));
+          render();
+        });
+      });
+      ["a-wing", "b-wing", "a-inst", "b-inst"].forEach(function (id) {
+        $("#" + id).addEventListener("change", render);
+      });
+      buildHeatmap();
+
+      // Allow deep-linking: relationships.html?a=4&b=8
+      const q = new URLSearchParams(location.search);
+      if (q.get("a") && q.get("b")) {
+        const qa = Math.min(9, Math.max(1, Number(q.get("a")) || 1));
+        const qb = Math.min(9, Math.max(1, Number(q.get("b")) || 9));
+        $("#a-type").value = qa; $("#b-type").value = qb;
+        fillWingSelect($("#a-wing"), qa); fillWingSelect($("#b-wing"), qb);
+      }
+      render();
+    })();
+  </script>
+  <script src="js/theme.js"></script>
+</body>
+</html>

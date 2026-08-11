@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Instinctual Variants — Official Enneagram</title>
+  <meta name="description" content="The three instincts (self-preservation, social, sexual), the six stackings, a mini-test to find yours, and all 27 subtypes with countertypes flagged.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-6 -6 120 120'%3E%3Ccircle cx='54' cy='9' r='12' fill='%23eb6834'/%3E%3Ccircle cx='82.9' cy='19.5' r='12' fill='%23eb6834'/%3E%3Ccircle cx='25.1' cy='19.5' r='12' fill='%23eb6834'/%3E%3Ccircle cx='98.3' cy='46.2' r='12' fill='%231baf7a'/%3E%3Ccircle cx='93' cy='76.5' r='12' fill='%231baf7a'/%3E%3Ccircle cx='69.4' cy='96.3' r='12' fill='%231baf7a'/%3E%3Ccircle cx='38.6' cy='96.3' r='12' fill='%232a78d6'/%3E%3Ccircle cx='15' cy='76.5' r='12' fill='%232a78d6'/%3E%3Ccircle cx='9.7' cy='46.2' r='12' fill='%232a78d6'/%3E%3C/svg%3E">
+  <meta property="og:site_name" content="Official Enneagram">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Instinctual Variants — Official Enneagram">
+  <meta property="og:description" content="The three instincts (self-preservation, social, sexual), the six stackings, a mini-test to find yours, and all 27 subtypes with countertypes flagged.">
+  <meta property="og:url" content="https://www.officialenneagram.com/instincts.html">
+  <meta property="og:image" content="https://www.officialenneagram.com/assets/social-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="apple-touch-icon" href="/assets/icon-180.png">
+  <meta name="theme-color" content="#f9f9f7" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0d0d0d" media="(prefers-color-scheme: dark)">
+  <script>
+    /* Set theme before first paint: light by default, dark only if chosen. */
+    (function () {
+      var t; try { t = localStorage.getItem("theme"); } catch (e) {}
+      document.documentElement.dataset.theme = t === "dark" ? "dark" : "light";
+    })();
+  </script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site">
+    <div class="bar">
+      <a class="brand" href="index.html"><svg width="21" height="21" viewBox="-6 -6 120 120" aria-hidden="true"><circle cx="54" cy="9" r="12" fill="#eb6834"/><circle cx="82.9" cy="19.5" r="12" fill="#eb6834"/><circle cx="25.1" cy="19.5" r="12" fill="#eb6834"/><circle cx="98.3" cy="46.2" r="12" fill="#1baf7a"/><circle cx="93" cy="76.5" r="12" fill="#1baf7a"/><circle cx="69.4" cy="96.3" r="12" fill="#1baf7a"/><circle cx="38.6" cy="96.3" r="12" fill="#2a78d6"/><circle cx="15" cy="76.5" r="12" fill="#2a78d6"/><circle cx="9.7" cy="46.2" r="12" fill="#2a78d6"/></svg><span class="brand-text">Official <b>Ennea</b>gram</span></a>
+      <nav class="main" aria-label="Main">
+        <a href="index.html">Overview</a>
+        <a href="types.html">Types</a>
+        <a href="growth.html">Growth</a>
+        <a href="mislabelings.html">Mislabelings</a>
+        <a href="instincts.html" aria-current="page">Instincts</a>
+        <a href="relationships.html">Pairings</a>
+        <a href="similarities.html">Similarities</a>
+        <a href="tests.html">Tests</a>
+      </nav>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch theme">🌙</button>
+    </div>
+  </header>
+
+  <main>
+    <h1>Instinctual Variants</h1>
+    <p>
+      Underneath your type run three survival instincts everyone carries:
+      <strong>self-preservation</strong>, <strong>social</strong>, and
+      <strong>sexual (one-to-one)</strong>. One dominates, one supports, one is a blind spot —
+      and the dominant instinct bends your type into one of three distinct
+      <strong>subtypes</strong>. That's why two people of the same type can look wildly
+      different: a self-pres Seven hoards cozy opportunities while a social Seven gives its
+      appetite away to the group.
+    </p>
+
+    <div class="grid cols-3 rainbow" id="instinct-cards"></div>
+
+    <h2>The six stackings</h2>
+    <p>
+      Your top two instincts form your <strong>stacking</strong> (dominant/secondary); the third
+      is the <strong>blind spot</strong> — the domain you under-attend until it bites. Sp/so and
+      so/sp differ more than they sound: order matters.
+    </p>
+    <div class="grid cols-3 rainbow" id="stacking-cards"></div>
+
+    <div class="card" id="mini-test">
+      <h2 style="margin-top:0" class="no-rule">Find your stacking — 12 quick items</h2>
+      <p class="quiz-meta">Rate each statement from 1 (not me at all) to 5 (very much me). Answer
+      for your default self, not your best day.</p>
+      <div id="mini-items"></div>
+      <div id="mini-result"></div>
+    </div>
+
+    <h2>The 27 subtypes</h2>
+    <p>
+      Each type comes in three flavors — and one of the three is the
+      <strong>countertype</strong>: the version that runs <em>against</em> the type's usual
+      passion, and the one most often mistyped. Open your type:
+    </p>
+    <div id="subtype-list"></div>
+
+    <div class="callout flag">
+      <p class="kicker">Instincts are a mistyping engine</p>
+      <p>
+        Most stubborn mistypings are countertypes: the counterphobic <strong>sx6</strong> reads as
+        an 8, the modest <strong>sp3</strong> as a 1 or 6, the fiery <strong>sx4</strong> as an 8,
+        the group-hearted <strong>so8</strong> as a 2, the busy <strong>so9</strong> as a 3, the
+        romantic <strong>sx5</strong> as a 4. If your test result never quite fit, check the
+        countertype of your runner-up — then the <a href="mislabelings.html">mislabelings
+        guide</a> for the clinical look-alikes.
+      </p>
+    </div>
+
+    <div class="callout">
+      <p><strong>Instincts and couples:</strong> instinct matching often predicts day-to-day
+      compatibility better than type does — shared dominant instincts mean shared priorities.
+      The <a href="relationships.html">pairings page</a> now takes instincts into account.</p>
+    </div>
+  </main>
+
+  <footer class="site">
+    <p>Official Enneagram — an educational resource. Subtype sketches follow the naming tradition
+    popularized by Beatrice Chestnut, paraphrased and compressed.</p>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/instincts.js"></script>
+  <script>
+    (function () {
+      "use strict";
+      const $ = (s) => document.querySelector(s);
+
+      // Instinct + stacking cards
+      $("#instinct-cards").innerHTML = Object.values(INSTINCTS).map(function (i) {
+        return '<div class="card"><p class="kicker">' + i.key + " · " + i.name + "</p>" +
+               "<p><strong>" + i.short + ".</strong> " + i.blurb + "</p></div>";
+      }).join("");
+      $("#stacking-cards").innerHTML = Object.keys(STACKINGS).map(function (k) {
+        return '<div class="card"><p class="kicker">' + k + "</p><p>" + STACKINGS[k] + "</p></div>";
+      }).join("");
+
+      // Subtype accordions
+      function centerClass(t) {
+        const c = ENNEAGRAM_TYPES[t].center;
+        return c.indexOf("Body") === 0 ? "center-body" : c.indexOf("Heart") === 0 ? "center-heart" : "center-head";
+      }
+      let h = "";
+      for (let t = 1; t <= 9; t++) {
+        h += '<details class="card lookalikes"><summary><span class="type-num ' + centerClass(t) + '">' + t +
+             "</span> Type " + t + " — " + ENNEAGRAM_TYPES[t].name + "</summary>";
+        ["sp", "so", "sx"].forEach(function (k) {
+          const s = SUBTYPES[t][k];
+          h += "<p><strong>" + k + t + ' · "' + s.name + '"' + "</strong>" +
+               (s.counter ? ' <span class="pill">countertype</span>' : "") + " — " + s.blurb + "</p>";
+        });
+        h += "</details>";
+      }
+      $("#subtype-list").innerHTML = h;
+
+      // ---- Mini stacking test ----
+      const ITEMS = [
+        { k: "sp", text: "I track comfort, health, money, and supplies almost automatically." },
+        { k: "so", text: "I always know roughly where I stand in a group's pecking order." },
+        { k: "sx", text: "One-on-one intensity beats any party." },
+        { k: "sp", text: "Before enjoying a place, I've noted the exits, the temperature, and where I'll sit." },
+        { k: "so", text: "Belonging to communities and causes energizes me." },
+        { k: "sx", text: "I seek full-contact chemistry with specific people, not general pleasantness." },
+        { k: "sp", text: "Security concerns — bills, food, sleep — can override my social plans." },
+        { k: "so", text: "I notice who's in, who's out, and how alliances are shifting." },
+        { k: "sx", text: "When someone or something fascinates me, everything else fades out." },
+        { k: "sp", text: "I'm the one who makes sure there are snacks, backups, and a plan B." },
+        { k: "so", text: "I shape myself to be a useful contributor to whatever group I'm in." },
+        { k: "sx", text: "I would rather have one electric connection than broad, mild harmony." }
+      ];
+      const answers = new Array(ITEMS.length).fill(null);
+
+      function renderItems() {
+        $("#mini-items").innerHTML = ITEMS.map(function (it, i) {
+          let row = '<div class="mini-row"><p>' + (i + 1) + ". " + it.text + "</p>" +
+                    '<div class="mini-scale" role="group" aria-label="Rating">';
+          for (let v = 1; v <= 5; v++) {
+            row += '<button type="button" data-i="' + i + '" data-v="' + v +
+                   (answers[i] === v ? '" class="sel">' : '">') + v + "</button>";
+          }
+          return row + "</div></div>";
+        }).join("");
+      }
+      $("#mini-items").addEventListener("click", function (e) {
+        const b = e.target.closest("button[data-i]");
+        if (!b) return;
+        answers[Number(b.dataset.i)] = Number(b.dataset.v);
+        renderItems();
+        if (answers.every(function (a) { return a !== null; })) scoreMini();
+        else $("#mini-result").innerHTML = "";
+      });
+
+      function scoreMini() {
+        const sums = { sp: 0, so: 0, sx: 0 }, counts = { sp: 0, so: 0, sx: 0 };
+        ITEMS.forEach(function (it, i) { sums[it.k] += answers[i]; counts[it.k]++; });
+        const ranked = Object.keys(sums).map(function (k) {
+          return { k: k, pct: Math.round(100 * (sums[k] - counts[k]) / (counts[k] * 4)) };
+        }).sort(function (a, b) { return b.pct - a.pct; });
+        const stack = ranked[0].k + "/" + ranked[1].k;
+        const close = ranked[0].pct - ranked[1].pct < 10;
+        let h = '<hr><p class="kicker">Your stacking</p>';
+        h += "<h3 style='margin:0.25rem 0'>" + stack + " — " + INSTINCTS[ranked[0].k].name +
+             " dominant, " + INSTINCTS[ranked[1].k].name.toLowerCase() + " second</h3>";
+        if (close) h += "<p><em>Your top two scored within a few points — read both orders of the stacking and see which bites.</em></p>";
+        h += "<p>" + (STACKINGS[stack] || "") + "</p>";
+        h += "<p><strong>Blind spot: " + INSTINCTS[ranked[2].k].name + ".</strong> The " +
+             INSTINCTS[ranked[2].k].short.toLowerCase() + " domain is the one you under-attend — " +
+             "chronic neglect here is usually the first thing partners and friends notice.</p>";
+        h += '<div class="score-chart">' + ranked.map(function (r, i) {
+          return '<div class="score-row' + (i === 0 ? " top" : "") + '"><span class="name">' +
+                 INSTINCTS[r.k].name + '</span><span class="track"><span class="bar" style="width:' +
+                 r.pct + '%"></span></span><span class="val">' + r.pct + "</span></div>";
+        }).join("") + "</div>";
+        h += "<p class='quiz-meta'>Combine this with your type from the <a href='tests.html'>tests</a> to find your subtype below.</p>";
+        $("#mini-result").innerHTML = h;
+      }
+
+      renderItems();
+    })();
+  </script>
+  <script src="js/theme.js"></script>
+</body>
+</html>

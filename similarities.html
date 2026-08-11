@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How the Types Are Similar — Official Enneagram</title>
+  <meta name="description" content="Compare any two enneagram types (with wings) side by side: what they share, how to tell them apart, and the nine wing-mirror pairs that blur into each other.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-6 -6 120 120'%3E%3Ccircle cx='54' cy='9' r='12' fill='%23eb6834'/%3E%3Ccircle cx='82.9' cy='19.5' r='12' fill='%23eb6834'/%3E%3Ccircle cx='25.1' cy='19.5' r='12' fill='%23eb6834'/%3E%3Ccircle cx='98.3' cy='46.2' r='12' fill='%231baf7a'/%3E%3Ccircle cx='93' cy='76.5' r='12' fill='%231baf7a'/%3E%3Ccircle cx='69.4' cy='96.3' r='12' fill='%231baf7a'/%3E%3Ccircle cx='38.6' cy='96.3' r='12' fill='%232a78d6'/%3E%3Ccircle cx='15' cy='76.5' r='12' fill='%232a78d6'/%3E%3Ccircle cx='9.7' cy='46.2' r='12' fill='%232a78d6'/%3E%3C/svg%3E">
+  <meta property="og:site_name" content="Official Enneagram">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="How the Types Are Similar — Official Enneagram">
+  <meta property="og:description" content="Compare any two enneagram types (with wings) side by side: what they share, how to tell them apart, and the nine wing-mirror pairs that blur into each other.">
+  <meta property="og:url" content="https://www.officialenneagram.com/similarities.html">
+  <meta property="og:image" content="https://www.officialenneagram.com/assets/social-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="apple-touch-icon" href="/assets/icon-180.png">
+  <meta name="theme-color" content="#f9f9f7" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0d0d0d" media="(prefers-color-scheme: dark)">
+  <script>
+    /* Set theme before first paint: light by default, dark only if chosen. */
+    (function () {
+      var t; try { t = localStorage.getItem("theme"); } catch (e) {}
+      document.documentElement.dataset.theme = t === "dark" ? "dark" : "light";
+    })();
+  </script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site">
+    <div class="bar">
+      <a class="brand" href="index.html"><svg width="21" height="21" viewBox="-6 -6 120 120" aria-hidden="true"><circle cx="54" cy="9" r="12" fill="#eb6834"/><circle cx="82.9" cy="19.5" r="12" fill="#eb6834"/><circle cx="25.1" cy="19.5" r="12" fill="#eb6834"/><circle cx="98.3" cy="46.2" r="12" fill="#1baf7a"/><circle cx="93" cy="76.5" r="12" fill="#1baf7a"/><circle cx="69.4" cy="96.3" r="12" fill="#1baf7a"/><circle cx="38.6" cy="96.3" r="12" fill="#2a78d6"/><circle cx="15" cy="76.5" r="12" fill="#2a78d6"/><circle cx="9.7" cy="46.2" r="12" fill="#2a78d6"/></svg><span class="brand-text">Official <b>Ennea</b>gram</span></a>
+      <nav class="main" aria-label="Main">
+        <a href="index.html">Overview</a>
+        <a href="types.html">Types</a>
+        <a href="growth.html">Growth</a>
+        <a href="mislabelings.html">Mislabelings</a>
+        <a href="instincts.html">Instincts</a>
+        <a href="relationships.html">Pairings</a>
+        <a href="similarities.html" aria-current="page">Similarities</a>
+        <a href="tests.html">Tests</a>
+      </nav>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch theme">🌙</button>
+    </div>
+  </header>
+
+  <main>
+    <h1>How the Types Are Similar</h1>
+    <p>
+      Every type shares real territory with every other type — that's why mistyping is so easy.
+      Compare any two types side by side (wings included), see exactly what they share, and learn
+      the one question that tells them apart.
+    </p>
+
+    <div class="card">
+      <h2 style="margin-top:0" class="no-rule">Compare two types</h2>
+      <div class="pair-picker">
+        <fieldset>
+          <legend>First</legend>
+          <label>Type <select id="a-type"></select></label>
+          <label>Wing <select id="a-wing"></select></label>
+        </fieldset>
+        <div class="pair-heart" aria-hidden="true">⇄</div>
+        <fieldset>
+          <legend>Second</legend>
+          <label>Type <select id="b-type"></select></label>
+          <label>Wing <select id="b-wing"></select></label>
+        </fieldset>
+      </div>
+      <div id="compare-result"></div>
+    </div>
+
+    <h2>The nine wing mirrors</h2>
+    <p>
+      Adjacent types with wings pointed at each other — 4w5 and 5w4, 8w9 and 9w8 — are the
+      most-confused pairs in the whole system. The blend is nearly the same; only the base note
+      differs.
+    </p>
+    <div class="grid cols-3 rainbow" id="mirror-list"></div>
+
+    <h2>Every type's look-alikes</h2>
+    <p>For each type, what it shares with all eight others — and the tell that separates them.</p>
+    <div id="lookalike-list"></div>
+
+    <div class="callout">
+      <p><strong>Similar behavior, different engine.</strong> When two types are hard to tell
+      apart, the question is never "which behaviors do I have?" — it's "what am I afraid would
+      happen if I stopped?" If the answer still doesn't settle it, the
+      <a href="mislabelings.html">mislabelings guide</a> covers the clinical look-alikes too.</p>
+    </div>
+  </main>
+
+  <footer class="site">
+    <p>Official Enneagram — an educational resource. Similarity notes describe average patterns, not
+    individuals.</p>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/pairs.js"></script>
+  <script>
+    (function () {
+      "use strict";
+      const $ = (s) => document.querySelector(s);
+
+      function centerClass(t) {
+        const c = ENNEAGRAM_TYPES[t].center;
+        return c.indexOf("Body") === 0 ? "center-body" : c.indexOf("Heart") === 0 ? "center-heart" : "center-head";
+      }
+
+      function fillTypeSelect(sel) {
+        for (let t = 1; t <= 9; t++) {
+          const o = document.createElement("option");
+          o.value = t;
+          o.textContent = t + " — " + ENNEAGRAM_TYPES[t].name;
+          sel.appendChild(o);
+        }
+      }
+      function fillWingSelect(sel, type) {
+        const prev = sel.value;
+        sel.innerHTML = "";
+        const n = WING_NEIGHBORS[type];
+        [["balanced", "Balanced / none"], [String(n[0]), type + "w" + n[0]], [String(n[1]), type + "w" + n[1]]]
+          .forEach(function (pair) {
+            const o = document.createElement("option");
+            o.value = pair[0]; o.textContent = pair[1];
+            sel.appendChild(o);
+          });
+        if ([...sel.options].some(o => o.value === prev)) sel.value = prev;
+      }
+
+      function column(t, wing) {
+        const d = ENNEAGRAM_TYPES[t];
+        const wingKey = wing === "balanced" ? null : t + "w" + wing;
+        let h = '<div class="compare-col">';
+        h += '<p><span class="type-num ' + centerClass(t) + '">' + t + "</span> <strong>" + d.name + "</strong>" +
+             (wingKey ? ' <span class="pill">' + wingKey + "</span>" : "") + "</p>";
+        h += "<p><b>Center:</b> " + d.center + "</p>";
+        h += "<p><b>Core fear:</b> " + d.coreFear + "</p>";
+        h += "<p><b>Core desire:</b> " + d.coreDesire + "</p>";
+        h += "<p><b>Vice → virtue:</b> " + d.vice + " → " + d.virtue + "</p>";
+        if (wingKey && d.wings[wingKey]) h += "<p><b>" + wingKey + ":</b> " + d.wings[wingKey] + "</p>";
+        h += "</div>";
+        return h;
+      }
+
+      function render() {
+        const a = Number($("#a-type").value), b = Number($("#b-type").value);
+        const wa = $("#a-wing").value, wb = $("#b-wing").value;
+        let h = '<div class="compare-grid">' + column(a, wa) + column(b, wb) + "</div>";
+
+        if (a === b) {
+          h += "<h3>Same type, two flavors</h3>";
+          if (wa !== wb && wa !== "balanced" && wb !== "balanced") {
+            const ka = a + "w" + wa, kb = b + "w" + wb;
+            h += "<p>Same engine, different paint. <strong>" + ka + ":</strong> " + ENNEAGRAM_TYPES[a].wings[ka] +
+                 " <strong>" + kb + ":</strong> " + ENNEAGRAM_TYPES[b].wings[kb] + "</p>";
+          } else {
+            h += "<p>Two people of the same core type share the same fear and desire; their differences " +
+                 "come from wings, instinct stackings, and health level — not from the type itself.</p>";
+          }
+        } else {
+          const sim = SIMILAR[pairKey(a, b)];
+          h += "<h3>Shared ground</h3><p>" + sim.shared + "</p>";
+          h += "<h3>The tell</h3><p>" + sim.tell + "</p>";
+          if (WING_NEIGHBORS[a].indexOf(b) !== -1) {
+            const mirror = WING_MIRRORS.find(function (m) {
+              return m.pair.indexOf(a + "w" + b) !== -1 || m.pair.indexOf(b + "w" + a) !== -1;
+            });
+            if (mirror) h += '<p><span class="pill">Wing mirror</span> ' + mirror.how + "</p>";
+          }
+        }
+        h += '<p class="quiz-meta"><a href="relationships.html?a=' + a + "&b=" + b +
+             '">How do these two do as a couple? →</a></p>';
+        $("#compare-result").innerHTML = h;
+      }
+
+      // Wing mirror cards
+      $("#mirror-list").innerHTML = WING_MIRRORS.map(function (m) {
+        return '<div class="card"><p class="kicker">' + m.pair + "</p><p>" + m.how + "</p></div>";
+      }).join("");
+
+      // Per-type look-alike lists
+      let lk = "";
+      for (let t = 1; t <= 9; t++) {
+        lk += '<details class="card lookalikes"><summary><span class="type-num ' + centerClass(t) + '">' + t +
+              "</span> Type " + t + " — " + ENNEAGRAM_TYPES[t].name + "</summary><table><tbody>";
+        for (let o = 1; o <= 9; o++) {
+          if (o === t) continue;
+          const sim = SIMILAR[pairKey(t, o)];
+          lk += "<tr><th scope='row'>with " + o + "</th><td>" + sim.shared + " <em>" + sim.tell + "</em></td></tr>";
+        }
+        lk += "</tbody></table></details>";
+      }
+      $("#lookalike-list").innerHTML = lk;
+
+      fillTypeSelect($("#a-type"));
+      fillTypeSelect($("#b-type"));
+      $("#b-type").value = "9";
+      fillWingSelect($("#a-wing"), 1);
+      fillWingSelect($("#b-wing"), 9);
+      ["a-type", "b-type"].forEach(function (id) {
+        $("#" + id).addEventListener("change", function () {
+          fillWingSelect($("#" + id[0] + "-wing"), Number(this.value));
+          render();
+        });
+      });
+      ["a-wing", "b-wing"].forEach(function (id) {
+        $("#" + id).addEventListener("change", render);
+      });
+
+      // Deep link: similarities.html?a=5&b=9
+      const q = new URLSearchParams(location.search);
+      if (q.get("a") && q.get("b")) {
+        const qa = Math.min(9, Math.max(1, Number(q.get("a")) || 1));
+        const qb = Math.min(9, Math.max(1, Number(q.get("b")) || 9));
+        $("#a-type").value = qa; $("#b-type").value = qb;
+        fillWingSelect($("#a-wing"), qa); fillWingSelect($("#b-wing"), qb);
+      }
+      render();
+    })();
+  </script>
+  <script src="js/theme.js"></script>
+</body>
+</html>
